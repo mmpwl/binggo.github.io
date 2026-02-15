@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anniversary Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500&family=Sarabun:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Prompt', sans-serif;
+      overflow-x: hidden;
+      background: #fefefe;
+    }
+    
+    /* Intro Page */
+    .intro {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(to bottom, #fff5f7 0%, #ffffff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      animation: fadeIn 1s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .heart-container {
+      position: relative;
+      margin-bottom: 3rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .heart-symbol {
+      font-size: 6rem;
+      color: #ffb3c6;
+      opacity: 0.9;
+      filter: drop-shadow(0 4px 12px rgba(255, 179, 198, 0.3));
+    }
+    
+    .intro h1 {
+      font-size: 2.2rem;
+      color: #333;
+      margin-bottom: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+    
+    .intro p {
+      font-size: 1rem;
+      color: #999;
+      margin-bottom: 3rem;
+      font-weight: 200;
+      letter-spacing: 1px;
+    }
+    
+    .start-btn {
+      padding: 0.9rem 3.5rem;
+      font-size: 1rem;
+      background: #fff;
+      color: #ff99b3;
+      border: 1.5px solid #ffccdd;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 300;
+      letter-spacing: 2px;
+      box-shadow: 0 2px 8px rgba(255, 153, 179, 0.1);
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .start-btn:hover {
+      background: #ff99b3;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(255, 153, 179, 0.25);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .intro h1 {
+        font-size: 1.8rem;
+      }
+      
+      .intro p {
+        font-size: 0.9rem;
+      }
+      
+      .heart-symbol {
+        font-size: 4.5rem;
+      }
+      
+      .start-btn {
+        padding: 0.8rem 2.5rem;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Intro Page -->
+  <div class="intro">
+    <div class="heart-container">
+      <div class="heart-symbol">♡</div>
+    </div>
+    <h1>Web For You</h1>
+    <p>สำหรับคนที่เป็นข้าวกระเพราไก่ไข่ดาเพิ่มข้าวของหนูค่ะ</p>
+    <a href="menu.html" class="start-btn">START</a>
+  </div>
+</body>
+</html>

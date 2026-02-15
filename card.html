@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การ์ดวันวาเลนไทน์</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500&family=Sarabun:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #fef8f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .title {
+            font-family: 'Mitr', sans-serif;
+            font-size: clamp(1.5em, 5vw, 2.2em);
+            font-weight: 300;
+            color: #d4968f;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .subtitle {
+            font-size: clamp(0.85em, 3vw, 1em);
+            font-weight: 300;
+            color: #b8a19f;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            padding: 0 10px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bouquet-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease 0.4s both;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            max-width: 90%;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .bouquet-container:hover {
+            transform: scale(1.05);
+        }
+
+        .bouquet-container:active {
+            transform: scale(0.98);
+        }
+
+        /* รูปช่อดอกไม้ */
+        .bouquet-image {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            filter: drop-shadow(0 8px 20px rgba(212, 150, 143, 0.15));
+            transition: filter 0.3s ease;
+            display: block;
+        }
+
+        .bouquet-container:hover .bouquet-image {
+            filter: drop-shadow(0 10px 25px rgba(212, 150, 143, 0.2));
+        }
+
+        /* ข้อความเชิญชวน */
+        .click-hint {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(0.75em, 2.5vw, 0.85em);
+            font-weight: 300;
+            color: #d4a19f;
+            animation: gentle-bounce 2s infinite ease-in-out;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+        }
+
+        @keyframes gentle-bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateX(-50%) translateY(-5px);
+                opacity: 1;
+            }
+        }
+
+        /* การ์ดที่เด้งขึ้น */
+        .card-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 420px;
+            max-width: 92vw;
+            max-height: 85vh;
+            overflow-y: auto;
+            background: #ffffff;
+            padding: 55px 45px;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(212, 150, 143, 0.18);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(212, 150, 143, 0.1);
+        }
+
+        .card-popup.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .card-header {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .card-popup h2 {
+            font-family: 'Mitr', sans-serif;
+            color: #d4968f;
+            font-size: clamp(1.4em, 4vw, 1.8em);
+            font-weight: 400;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .card-divider {
+            width: 50px;
+            height: 1px;
+            background: #e8d5d3;
+            margin: 0 auto;
+        }
+
+        .card-popup p {
+            color: #7a6866;
+            font-size: clamp(0.95em, 2.5vw, 1.05em);
+            font-weight: 300;
+            line-height: 1.9;
+            text-align: center;
+            margin-bottom: 12px;
+            animation: fadeInText 0.4s ease forwards;
+            opacity: 0;
+            letter-spacing: 0.3px;
+        }
+
+        .card-popup.active p:nth-of-type(1) { animation-delay: 0.15s; }
+        .card-popup.active p:nth-of-type(2) { animation-delay: 0.3s; }
+        .card-popup.active p:nth-of-type(3) { animation-delay: 0.45s; }
+        .card-popup.active p:nth-of-type(4) { animation-delay: 0.6s; }
+        .card-popup.active p:nth-of-type(5) { animation-delay: 0.75s; }
+        .card-popup.active p:nth-of-type(6) { animation-delay: 0.9s; }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-signature {
+            font-family: 'Mitr', sans-serif;
+            font-weight: 400;
+            color: #d4968f;
+            margin-top: 25px;
+            font-size: clamp(1em, 2.8vw, 1.1em) !important;
+            letter-spacing: 0.5px;
+        }
+
+        .close-btn {
+            background: #d4968f;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: clamp(0.9em, 2.5vw, 0.95em);
+            font-weight: 400;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 0.5px;
+            font-family: 'Sarabun', sans-serif;
+            width: auto;
+            min-width: 120px;
+        }
+
+        .close-btn:hover {
+            background: #c98a83;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(212, 150, 143, 0.25);
+        }
+
+        .close-btn:active {
+            transform: translateY(0);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(254, 248, 248, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* หัวใจลอย */
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            color: #e8c8c4;
+            opacity: 0;
+            animation: float 2.5s ease-in-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes float {
+            0% {
+                opacity: 0.8;
+                transform: translateY(0) scale(0.5) rotate(0deg);
+            }
+            50% {
+                opacity: 0.6;
+                transform: translateY(-100px) scale(1) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(0.3) rotate(360deg);
+            }
+        }
+
+        /* ดอกไม้ลอยในพื้นหลัง */
+        .floating-petal {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, rgba(232, 200, 196, 0.4), rgba(212, 150, 143, 0.2));
+            border-radius: 50% 0 50% 0;
+            opacity: 0.3;
+            animation: floatPetal 20s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes floatPetal {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ปุ่มกลับ */
+        .back-btn {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #d4968f;
+            border: 1px solid rgba(212, 150, 143, 0.3);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: clamp(0.85em, 2.5vw, 0.95em);
+            font-weight: 400;
+            font-family: 'Sarabun', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(212, 150, 143, 0.1);
+            letter-spacing: 0.3px;
+        }
+
+        .back-btn:hover {
+            background: #d4968f;
+            color: white;
+            transform: translateX(-3px);
+            box-shadow: 0 6px 20px rgba(212, 150, 143, 0.2);
+        }
+
+        .back-btn:active {
+            transform: translateX(-1px);
+        }
+
+        /* Tablet (768px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .bouquet-image {
+                max-width: 350px;
+            }
+            
+            .card-popup {
+                width: 85%;
+                max-width: 500px;
+                padding: 50px 40px;
+            }
+
+            .subtitle {
+                margin-bottom: 40px;
+            }
+        }
+
+        /* Mobile Large (481px - 768px) */
+        @media (max-width: 768px) {
+            .bouquet-image {
+                max-width: 300px;
+            }
+            
+            .card-popup {
+                width: 90%;
+                padding: 40px 30px;
+                max-height: 80vh;
+            }
+
+            .subtitle {
+                margin-bottom: 35px;
+            }
+
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+            }
+
+            .click-hint {
+                bottom: -30px;
+            }
+
+            .card-header {
+                margin-bottom: 25px;
+            }
+
+            .card-popup p {
+                line-height: 1.8;
+                margin-bottom: 10px;
+            }
+
+            .card-signature {
+                margin-top: 20px;
+            }
+
+            .close-btn {
+                margin-top: 20px;
+                padding: 11px 30px;
+            }
+        }
+
+        /* Mobile Medium (376px - 480px) */
+        @media (max-width: 480px) {
+            .bouquet-image {
+                max-width: 260px;
+            }
+
+            .card-popup {
+                padding: 35px 25px;
+                max-height: 78vh;
+            }
+
+            .subtitle {
+                margin-bottom: 30px;
+            }
+
+            .back-btn {
+                top: 12px;
+                left: 12px;
+                padding: 9px 18px;
+                gap: 6px;
+            }
+
+            .click-hint {
+                bottom: -28px;
+            }
+
+            .card-header {
+                margin-bottom: 20px;
+            }
+
+            .card-divider {
+                width: 40px;
+            }
+
+            .card-popup p {
+                line-height: 1.75;
+                margin-bottom: 8px;
+            }
+
+            .card-signature {
+                margin-top: 18px;
+            }
+
+            .close-btn {
+                margin-top: 18px;
+                padding: 10px 28px;
+                min-width: 110px;
+            }
+        }
+
+        /* Mobile Small (≤375px) */
+        @media (max-width: 375px) {
+            .bouquet-image {
+                max-width: 230px;
+            }
+
+            .card-popup {
+                padding: 30px 20px;
+                max-height: 75vh;
+            }
+
+            .subtitle {
+                margin-bottom: 25px;
+            }
+
+            .back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 8px 16px;
+                gap: 5px;
+            }
+
+            .click-hint {
+                bottom: -25px;
+            }
+
+            .card-header {
+                margin-bottom: 18px;
+            }
+
+            .card-divider {
+                width: 35px;
+            }
+
+            .card-popup p {
+                line-height: 1.7;
+                margin-bottom: 7px;
+            }
+
+            .card-signature {
+                margin-top: 15px;
+            }
+
+            .close-btn {
+                margin-top: 15px;
+                padding: 9px 25px;
+                min-width: 100px;
+            }
+
+            .floating-petal {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        /* Landscape mode for mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .card-popup {
+                max-height: 90vh;
+                padding: 25px 30px;
+            }
+
+            .card-header {
+                margin-bottom: 15px;
+            }
+
+            .card-popup p {
+                margin-bottom: 6px;
+                line-height: 1.6;
+            }
+
+            .card-signature {
+                margin-top: 12px;
+            }
+
+            .close-btn {
+                margin-top: 12px;
+                padding: 8px 25px;
+            }
+
+            .subtitle {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Very small devices */
+        @media (max-width: 320px) {
+            .bouquet-image {
+                max-width: 200px;
+            }
+
+            .card-popup {
+                padding: 25px 18px;
+            }
+
+            .back-btn {
+                top: 8px;
+                left: 8px;
+                padding: 7px 14px;
+            }
+
+            .close-btn {
+                padding: 8px 22px;
+                min-width: 90px;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .bouquet-container:hover {
+                transform: scale(1);
+            }
+
+            .back-btn:hover {
+                background: rgba(255, 255, 255, 0.95);
+                color: #d4968f;
+                transform: none;
+            }
+
+            .close-btn:hover {
+                background: #d4968f;
+                transform: none;
+            }
+
+            /* Larger tap targets for mobile */
+            .bouquet-container {
+                padding: 10px;
+                margin: -10px;
+            }
+
+            .close-btn {
+                min-height: 44px;
+            }
+
+            .back-btn {
+                min-height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ปุ่มกลับ -->
+    <a href="menu.html" class="back-btn">
+        <span>←</span>
+        <span>กลับ</span>
+    </a>
+
+    <!-- กลีบดอกไม้ลอย -->
+    <div class="floating-petal" style="left: 15%; animation-delay: 0s;"></div>
+    <div class="floating-petal" style="left: 50%; animation-delay: 5s;"></div>
+    <div class="floating-petal" style="left: 85%; animation-delay: 10s;"></div>
+
+    <div class="container">
+        <h1 class="title">สุขสันต์วันวาเลนไทน์</h1>
+        <p class="subtitle">คลิกที่ช่อดอกไม้เพื่อรับข้อความพิเศษ</p>
+        
+        <div class="bouquet-container" id="bouquetBtn">
+            <img src="bouquet.png" alt="ช่อดอกไม้" class="bouquet-image">
+            <div class="click-hint">👆 คลิกที่นี่</div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- การ์ดที่เด้งขึ้น -->
+    <div class="card-popup" id="cardPopup">
+        <div class="card-header">
+            <h2>ถึงคุณผู้พิเศษ</h2>
+            <div class="card-divider"></div>
+        </div>
+        <p>หนูอยากให้วันนี้เป็นอีกวันที่พี่ยิ้มได้เยอะ ๆ และอยากให้พี่รู้ว่ามีหนูคอยเอาใจช่วยพี่อยู่เสมอเลยนะ</p>
+        <p>หนูอยากให้พี่รู้ว่า ระหว่างทางถ้าพี่เหนื่อย ท้อ หรืออยากมีใครสักคนคอยฟัง พี่ยังมีหนูอยู่ตรงนี้เสมอนะ อาจจะช่วยอะไรไม่ได้มาก แต่หนูยินดีเป็นกำลังใจเล็ก ๆ ที่คอยซัพพอร์ตพี่ในทุกวันเลย</p>
+        <p>หนูขอให้เส้นทางของพี่เต็มไปด้วยโอกาสดี ๆ คนรอบตัวที่น่ารัก และความสำเร็จที่พี่ตั้งใจไว้ ขอให้การเลื่อนขั้นครั้งนี้เป็นอีกก้าวที่ทำให้พี่ภูมิใจในตัวเองมากขึ้น และมีความสุขกับสิ่งที่ทำในทุก ๆ วันนะคะ</p>
+        <p>แล้วก็อย่าลืมดูแลตัวเองดี ๆ ด้วยนะ ทำงานเก่งแค่ไหน หนูก็อยากให้พี่มีความสุขและสุขภาพดีไปพร้อมกัน เพราะพี่สำคัญกับหนูมากจริง ๆ</p>
+        <p>วาเลนไทน์ปีนี้ หนูขอให้พี่มีทั้งความรัก ความสบายใจ และความสำเร็จในแบบที่พี่หวังไว้เลยนะคะ 🤍 ขอบคุณที่เข้ามาเป็นรอยยิ้มและเป็นคนพิเศษอีกคนหนึ่งในชีวิตหนูนะ</p>
+        <p class="card-signature">หนูเป็นกำลังใจให้พี่เสมอ ♡</p>
+        <button class="close-btn" id="closeBtn">ปิดการ์ด</button>
+    </div>
+
+    <script>
+        // ดึง elements
+        const bouquetBtn = document.getElementById('bouquetBtn');
+        const cardPopup = document.getElementById('cardPopup');
+        const overlay = document.getElementById('overlay');
+        const closeBtn = document.getElementById('closeBtn');
+
+        // ฟังก์ชันเปิดการ์ด
+        function showCard() {
+            cardPopup.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            createHearts();
+        }
+
+        // ฟังก์ชันปิดการ์ด
+        function closeCard() {
+            cardPopup.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Event listeners
+        bouquetBtn.addEventListener('click', showCard);
+        overlay.addEventListener('click', closeCard);
+        closeBtn.addEventListener('click', closeCard);
+
+        // ฟังก์ชันสร้างหัวใจลอย
+        function createHearts() {
+            const bouquet = bouquetBtn;
+            const rect = bouquet.getBoundingClientRect();
+            
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '♡';
+                    
+                    const angle = (Math.PI * 2 * i) / 12;
+                    const radius = 40;
+                    const x = rect.left + rect.width / 2 + Math.cos(angle) * radius;
+                    const y = rect.top + rect.height / 2 + Math.sin(angle) * radius;
+                    
+                    heart.style.left = x + 'px';
+                    heart.style.top = y + 'px';
+                    heart.style.fontSize = (Math.random() * 15 + 20) + 'px';
+                    
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 2500);
+                }, i * 100);
+            }
+        }
+
+        // ปิดการ์ดเมื่อกด ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCard();
+            }
+        });
+
+        // เพิ่มเอฟเฟกต์กลีบดอกไม้ลอย
+        window.addEventListener('load', function() {
+            setInterval(() => {
+                if (Math.random() > 0.85) {
+                    const petal = document.createElement('div');
+                    petal.className = 'floating-petal';
+                    petal.style.left = Math.random() * 100 + '%';
+                    petal.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                    document.body.appendChild(petal);
+                    
+                    setTimeout(() => {
+                        petal.remove();
+                    }, 25000);
+                }
+            }, 5000);
+        });
+
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

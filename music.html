@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recents - Photo Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-3px);
+        }
+
+        .back-icon {
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover .back-icon {
+            transform: translateX(-3px);
+        }
+
+        .back-text {
+            font-size: 18px;
+        }
+
+        .header-icon {
+            font-size: 20px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .menu-icon {
+            font-size: 28px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .gallery-item.hidden {
+            display: none;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item.active .image-container {
+            border: 2px solid #4CAF50;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .image-container {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            opacity: 0.6;
+            color: #888;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .item-title {
+            margin-top: 12px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .item-author {
+            margin-top: 4px;
+            font-size: 14px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-green {
+            background: #4CAF50;
+        }
+
+        .music-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(20, 20, 20, 0.98) 0%, rgba(10, 10, 10, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .album-art {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background: #2a2a2a;
+            overflow: hidden;
+        }
+
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .song-artist {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn svg {
+            width: 100%;
+            height: 100%;
+            fill: white;
+            transition: fill 0.3s ease;
+        }
+
+        #repeat-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: rgba(255, 255, 255, 0.5);
+        }
+
+        #repeat-btn.active svg {
+            fill: #4CAF50;
+        }
+
+        #play-btn {
+            width: 50px;
+            height: 50px;
+        }
+
+        #play-btn svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #66BB6A 0%, #4CAF50 100%);
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .back-btn {
+                font-size: 16px;
+                padding: 6px 10px;
+            }
+
+            .back-icon {
+                font-size: 20px;
+            }
+
+            .back-text {
+                font-size: 16px;
+            }
+
+            .filter-buttons {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+
+            .music-player {
+                padding: 12px 15px;
+            }
+
+            .album-art {
+                width: 50px;
+                height: 50px;
+            }
+
+            #play-btn {
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="goToMenu()">
+            <span class="back-icon">←</span>
+            <span class="back-text">Menu</span>
+        </button>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+            <button class="filter-btn" data-filter="thai">เพลงไทย</button>
+            <button class="filter-btn" data-filter="inter">เพลงสากล</button>
+        </div>
+        <div class="menu-icon" onclick="goToMenu()">☰</div>
+    </div>
+
+    <div class="gallery" id="gallery">
+        <!-- Gallery items will be generated dynamically from songs array -->
+    </div>
+
+    <div class="music-player">
+        <div class="album-art">
+            <img id="player-img" style="display: none;">
+            <div class="placeholder" id="player-placeholder" style="font-size: 12px;">ไม่มีรูปภาพ</div>
+        </div>
+        <div class="song-info">
+            <div class="song-title">เลือกเพลง</div>
+            <div class="song-artist">-</div>
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <button class="control-btn" id="repeat-btn" title="Repeat">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 17H7V14L3 18L7 22V19H19V13H17V17ZM7 7H17V10L21 6L17 2V5H5V11H7V7Z"/>
+                </svg>
+            </button>
+            <button class="control-btn" id="play-btn" title="Play">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Song data - แก้ไขที่นี่เท่านั้น การ์ดและ player จะอัปเดตอัตโนมัติ
+        const songs = [
+{ 
+                title: 'Cinnamon Girl', 
+                artist: 'Lana Del Rey', 
+                type: 'inter',
+                image: 'music11.jpg',
+                audio: 'Lana Del Rey - Cinnamon Girl.mp3' // ใส่ URL ไฟล์ MP3 ตรงนี้
+            },
+            { 
+                title: 'I Love You So', 
+                artist: 'The Walters', 
+                type: 'inter',
+                image: 'music12.jpg',
+                audio: 'The Walters -- I Love You So.mp3'
+            },
+            { 
+                title: 'เพลงรักเพลงแรก (Blooming)', 
+                artist: 'LANDOKMAI', 
+                type: 'thai',
+                image: 'music1.jpg',
+                audio: 'LANDOKMAI -  Blooming Official Lyrics.mp3'
+            },
+            { 
+                title: 'Perfect', 
+                artist: 'Ed Sheeran', 
+                type: 'inter',
+                image: 'music13.jpg',
+                audio: 'Ed Sheeran - Perfect.mp3'
+            },
+            { 
+                title: 'งานเต้นรำในคืนพระจันทร์เต็มดวง', 
+                artist: 'Cocktail feat. นิว นภัสสร', 
+                type: 'thai',
+                image: 'music2.jpg',
+                audio: 'Cocktail .mp3'
+            },
+            { 
+                title: 'Until I Found You', 
+                artist: 'Stephen Sanchez', 
+                type: 'inter',
+                image: 'music14.jpg',
+                audio: 'Until I Found You - Stephen Sanchez.mp3'
+            },
+            { 
+                title: 'เชื้อไฟ', 
+                artist: 'HUGO', 
+                type: 'thai',
+                image: 'music3.jpg',
+                audio: 'เชื้อไฟ - HUGO.mp3'
+            },
+            { 
+                title: 'Golden hour', 
+                artist: 'JVKE', 
+                type: 'inter',
+                image: 'music15.jpg',
+                audio: 'JVKE - golden hour.mp3'
+            },
+            { 
+                title: 'กลัวว่าฉันจะไม่เสียใจ (Fear)', 
+                artist: 'PURPEECH', 
+                type: 'thai',
+                image: 'music4.jpg',
+                audio: 'PURPEECH -  Fear Official MV.mp3'
+            },
+            { 
+                title: 'Michi Teyu Ku (Overflowing)', 
+                artist: 'Fujii Kaze', 
+                type: 'inter',
+                image: 'music16.jpg',
+                audio: 'Fujii Kaze - Michi Teyu Ku (Overflowing).mp3'
+            },
+            { 
+                title: 'Blue', 
+                artist: 'Yung kai', 
+                type: 'inter',
+                image: 'music17.jpg',
+                audio: 'yung kai - blue.mp3'
+            },
+            { 
+                title: 'About love', 
+                artist: 'Blackbeans', 
+                type: 'thai',
+                image: 'music5.jpg',
+                audio: 'Blackbeans - About love.mp3'
+            },
+            { 
+                title: 'Here With Me', 
+                artist: 'd4vd', 
+                type: 'inter',
+                image: 'music18.jpg',
+                audio: 'd4vd - Here With Me.mp3'
+            },
+            { 
+                title: 'ยิ้มลา (jasmine)', 
+                artist: 'BOWKYLION', 
+                type: 'thai',
+                image: 'music6.jpg',
+                audio: 'BOWKYLION -  jasmine Official MV.mp3'
+            },
+            { 
+                title: 'Stuck with U', 
+                artist: 'Ariana Grande, Justin Bieber', 
+                type: 'inter',
+                image: 'music19.jpg',
+                audio: 'Ariana Grande, Justin Bieber - Stuck with U.mp3'
+            },
+            { 
+                title: 'Summertime', 
+                artist: 'YEW feat. LANDOKMAI', 
+                type: 'thai',
+                image: 'music7.jpg',
+                audio: 'YEW - ลมแล้ง Summertime feat. LANDOKMAI.mp3'
+            },
+            { 
+                title: 'Lover', 
+                artist: 'Taylor Swift', 
+                type: 'inter',
+                image: 'music20.jpg',
+                audio: 'Taylor Swift - Lover.mp3'
+            },
+            { 
+                title: 'ขอให้เธอใจดี (May she be kind)', 
+                artist: 'FREEHAND', 
+                type: 'thai',
+                image: 'music8.jpg',
+                audio: 'ขอให้เธอใจดี-Freehand.mp3'
+            },
+            { 
+                title: 'ยิ้มทั้งน้ำตา (Always)', 
+                artist: 'BILLKIN', 
+                type: 'thai',
+                image: 'music9.jpg',
+                audio: 'ยิ้มทั้งน้ำตา - Billkin.mp3'
+            },
+            { 
+                title: 'จากกันโดยสมบูรณ์', 
+                artist: 'Guncharlie', 
+                type: 'thai',
+                image: 'music10.jpg',
+                audio: 'guncharlie - จากกันโดยสมบูรณ์.mp3'
+            }
+        ];
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let currentFilter = 'all';
+        let isRepeat = false;
+
+        // Create audio element
+        const audioPlayer = new Audio();
+        audioPlayer.volume = 0.7;
+
+        // Elements
+        const gallery = document.getElementById('gallery');
+        const playBtn = document.getElementById('play-btn');
+        const repeatBtn = document.getElementById('repeat-btn');
+        const songTitle = document.querySelector('.song-title');
+        const songArtist = document.querySelector('.song-artist');
+        const playerImg = document.getElementById('player-img');
+        const playerPlaceholder = document.getElementById('player-placeholder');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progress = document.getElementById('progress');
+
+        // SVG Icons
+        const playIcon = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>';
+        const pauseIcon = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';
+
+        // Audio event listeners
+        audioPlayer.addEventListener('ended', () => {
+            if (isRepeat) {
+                audioPlayer.currentTime = 0;
+                audioPlayer.play();
+            } else {
+                // Auto play next song
+                playNextSong();
+            }
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration) {
+                const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progress.style.width = progressPercent + '%';
+            }
+        });
+
+        // Update play button icon
+        function updatePlayButton(playing) {
+            playBtn.innerHTML = playing ? pauseIcon : playIcon;
+            playBtn.title = playing ? 'Pause' : 'Play';
+        }
+
+        // Click on progress bar to seek
+        progressBar.addEventListener('click', (e) => {
+            if (audioPlayer.duration) {
+                const rect = progressBar.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const width = rect.width;
+                const percentage = clickX / width;
+                audioPlayer.currentTime = audioPlayer.duration * percentage;
+            }
+        });
+
+        // Play next song
+        function playNextSong() {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            let nextIndex = (currentSongIndex + 1) % songs.length;
+            let attempts = 0;
+            
+            while (galleryItems[nextIndex]?.classList.contains('hidden') && attempts < songs.length) {
+                nextIndex = (nextIndex + 1) % songs.length;
+                attempts++;
+            }
+            
+            if (attempts < songs.length) {
+                currentSongIndex = nextIndex;
+                playSong(currentSongIndex);
+            }
+        }
+
+        // Generate gallery cards from songs array
+        function generateGallery() {
+            gallery.innerHTML = '';
+            
+            songs.forEach((song, index) => {
+                const card = document.createElement('div');
+                card.className = 'gallery-item';
+                card.dataset.song = index;
+                card.dataset.type = song.type;
+                
+                const imageDisplay = song.image 
+                    ? `<img src="${song.image}" style="display: block;">` 
+                    : `<img style="display: none;">`;
+                
+                const placeholderDisplay = song.image ? 'none' : 'flex';
+                
+                card.innerHTML = `
+                    <div class="image-container">
+                        ${imageDisplay}
+                        <div class="placeholder" style="display: ${placeholderDisplay};">ไม่มีรูปภาพ</div>
+                    </div>
+                    <div class="item-title">${song.title}</div>
+                    <div class="item-author">
+                        <span class="status-icon"></span>
+                        ${song.artist}
+                    </div>
+                `;
+                
+                // Add click event
+                card.addEventListener('click', () => {
+                    currentSongIndex = index;
+                    playSong(currentSongIndex);
+                });
+                
+                gallery.appendChild(card);
+            });
+        }
+
+        // Play song
+        function playSong(songIndex) {
+            const song = songs[songIndex];
+            
+            // Update UI
+            updatePlayer(songIndex);
+            
+            // Load and play audio if available
+            if (song.audio) {
+                audioPlayer.src = song.audio;
+                audioPlayer.play().then(() => {
+                    isPlaying = true;
+                    updatePlayButton(true);
+                }).catch(error => {
+                    console.log('Auto-play prevented:', error);
+                    isPlaying = false;
+                    updatePlayButton(false);
+                });
+            } else {
+                // No audio file
+                audioPlayer.pause();
+                audioPlayer.src = '';
+                isPlaying = false;
+                updatePlayButton(false);
+                console.log('No audio file for this song');
+            }
+        }
+
+        // Update player image
+        function updatePlayerImage(index) {
+            if (songs[index].image) {
+                playerImg.src = songs[index].image;
+                playerImg.style.display = 'block';
+                playerPlaceholder.style.display = 'none';
+            } else {
+                playerImg.style.display = 'none';
+                playerPlaceholder.style.display = 'flex';
+                playerPlaceholder.textContent = 'ไม่มีรูปภาพ';
+            }
+        }
+
+        // Filter functionality
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentFilter = btn.dataset.filter;
+                
+                const galleryItems = document.querySelectorAll('.gallery-item');
+                galleryItems.forEach(item => {
+                    const itemType = item.dataset.type;
+                    if (currentFilter === 'all' || currentFilter === itemType) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Update music player display
+        function updatePlayer(songIndex) {
+            const song = songs[songIndex];
+            songTitle.textContent = song.title;
+            songArtist.textContent = song.artist;
+            
+            updatePlayerImage(songIndex);
+            
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach((item, index) => {
+                const statusIcon = item.querySelector('.status-icon');
+                if (index === songIndex) {
+                    item.classList.add('active');
+                    statusIcon.classList.add('status-green');
+                } else {
+                    item.classList.remove('active');
+                    statusIcon.classList.remove('status-green');
+                }
+            });
+        }
+
+        // Play/pause toggle
+        playBtn.addEventListener('click', () => {
+            if (audioPlayer.src) {
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                    updatePlayButton(false);
+                } else {
+                    audioPlayer.play().then(() => {
+                        isPlaying = true;
+                        updatePlayButton(true);
+                    }).catch(error => {
+                        console.log('Play prevented:', error);
+                    });
+                }
+            } else {
+                // Try to play current song
+                playSong(currentSongIndex);
+            }
+        });
+
+        // Repeat toggle
+        repeatBtn.addEventListener('click', () => {
+            isRepeat = !isRepeat;
+            repeatBtn.classList.toggle('active', isRepeat);
+        });
+
+        // Initialize
+        generateGallery();
+        updatePlayer(currentSongIndex);
+
+        // Back to menu function
+        function goToMenu() {
+            window.location.href = 'menu.html';
+        }
+    </script>
+</body>
+</html>

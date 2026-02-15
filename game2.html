@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>เกมที่ 2: จับคู่ภาพ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Prompt', sans-serif;
+      background: #fafafa;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    /* Floating Hearts Background */
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .heart-bg {
+      position: fixed;
+      font-size: 20px;
+      color: #ff69b4;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatUp 20s infinite ease-in-out;
+    }
+
+    .heart-bg:nth-child(1) { left: 5%; animation-delay: 0s; font-size: 15px; }
+    .heart-bg:nth-child(2) { left: 15%; animation-delay: 3s; font-size: 25px; }
+    .heart-bg:nth-child(3) { left: 25%; animation-delay: 6s; font-size: 18px; }
+    .heart-bg:nth-child(4) { left: 35%; animation-delay: 9s; font-size: 22px; }
+    .heart-bg:nth-child(5) { left: 45%; animation-delay: 12s; font-size: 16px; }
+    .heart-bg:nth-child(6) { left: 55%; animation-delay: 2s; font-size: 24px; }
+    .heart-bg:nth-child(7) { left: 65%; animation-delay: 5s; font-size: 19px; }
+    .heart-bg:nth-child(8) { left: 75%; animation-delay: 8s; font-size: 21px; }
+    .heart-bg:nth-child(9) { left: 85%; animation-delay: 11s; font-size: 17px; }
+    .heart-bg:nth-child(10) { left: 95%; animation-delay: 4s; font-size: 23px; }
+
+    /* Start Screen */
+    #startScreen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100%;
+      background: linear-gradient(to bottom, #ffffff 0%, #fff5f8 100%);
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    .start-title {
+      font-size: 3em;
+      font-weight: 400;
+      color: #2c2c2c;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      animation: fadeInDown 0.8s ease;
+      position: relative;
+    }
+
+    .start-title::after {
+      content: '♥';
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.6em;
+      color: #ff69b4;
+      opacity: 0.7;
+      animation: heartPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes heartPulse {
+      0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateX(-50%) scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    .subtitle {
+      font-size: 1em;
+      font-weight: 300;
+      color: #999;
+      margin-bottom: 50px;
+      letter-spacing: 1px;
+      animation: fadeInDown 0.8s ease 0.2s backwards;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #startScreen button {
+      font-size: 1.2em;
+      font-weight: 400;
+      padding: 18px 60px;
+      border-radius: 50px;
+      border: 2px solid #2c2c2c;
+      background: #ffffff;
+      color: #2c2c2c;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      animation: fadeInUp 0.8s ease 0.4s backwards;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Prompt', sans-serif;
+      touch-action: manipulation;
+    }
+
+    #startScreen button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 105, 180, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    #startScreen button:hover::before,
+    #startScreen button:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #startScreen button:hover,
+    #startScreen button:active {
+      background: #2c2c2c;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(255, 105, 180, 0.2);
+    }
+
+    /* Decorative Elements */
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 105, 180, 0.15);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .deco-circle-1 {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      right: 10%;
+    }
+
+    .deco-circle-2 {
+      width: 200px;
+      height: 200px;
+      bottom: 15%;
+      left: 5%;
+      animation-direction: reverse;
+    }
+
+    /* Game Wrapper */
+    #gameWrapper {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 30px 15px 20px;
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #fafafa 0%, #fff5f8 100%);
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      color: #2c2c2c;
+      font-size: 2em;
+      font-weight: 400;
+      margin-bottom: 30px;
+      text-align: center;
+      letter-spacing: 1px;
+      animation: fadeIn 0.6s ease;
+      position: relative;
+    }
+
+    h1::before,
+    h1::after {
+      content: '♡';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.6em;
+      color: #ff69b4;
+      opacity: 0.5;
+    }
+
+    h1::before {
+      left: -40px;
+    }
+
+    h1::after {
+      right: -40px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Game Container */
+    .game-container {
+      width: 100%;
+      max-width: 500px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.1);
+      padding: 20px;
+      animation: fadeIn 0.8s ease 0.2s backwards;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      width: 100%;
+      padding-top: 100%;
+      position: relative;
+      background: #fff9fb;
+      border: 2px solid #ffe0ec;
+      border-radius: 10px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+
+    /* Touch feedback */
+    .card:active {
+      transform: scale(0.95);
+      box-shadow: 0 2px 8px rgba(255, 105, 180, 0.2);
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.25);
+    }
+
+    .card img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card.flipped img,
+    .card.matched img {
+      opacity: 1;
+    }
+
+    .card::before {
+      content: "♥";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      color: #ff69b4;
+      transition: opacity 0.3s ease;
+      opacity: 0.3;
+    }
+
+    .card.flipped::before,
+    .card.matched::before {
+      opacity: 0;
+    }
+
+    .card.matched {
+      pointer-events: none;
+      border-color: #ff69b4;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+      animation: matchedPulse 0.6s ease;
+    }
+
+    @keyframes matchedPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Progress Indicator */
+    .progress-container {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 25px;
+      animation: fadeIn 1s ease 0.4s backwards;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #ffe0ec;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff69b4, #ff85c0);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .progress-text {
+      text-align: center;
+      color: #666;
+      font-weight: 400;
+      margin-top: 12px;
+      font-size: 0.9em;
+      letter-spacing: 0.5px;
+    }
+
+    /* Popup */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .popup-content {
+      background: #ffffff;
+      border: 1px solid #ffe0ec;
+      padding: 50px 60px;
+      border-radius: 12px;
+      font-size: 1.6em;
+      font-weight: 400;
+      color: #2c2c2c;
+      text-align: center;
+      max-width: 90vw;
+      box-shadow: 0 20px 60px rgba(255, 105, 180, 0.2);
+      animation: popupShow 0.4s ease forwards;
+      letter-spacing: 1px;
+    }
+
+    .popup-content::before {
+      content: '♥';
+      font-size: 3em;
+      display: block;
+      margin-bottom: 20px;
+      color: #ff69b4;
+      font-weight: 300;
+      animation: heartbeat 1s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      25% {
+        transform: scale(1.2);
+      }
+      50% {
+        transform: scale(1);
+      }
+      75% {
+        transform: scale(1.1);
+      }
+    }
+
+    @keyframes popupShow {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Buttons */
+    button {
+      margin-top: 20px;
+      padding: 16px 40px;
+      background: #ffffff;
+      color: #2c2c2c;
+      border: 2px solid #2c2c2c;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 400;
+      transition: all 0.3s ease;
+      font-family: 'Prompt', sans-serif;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 105, 180, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover::before,
+    button:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:hover,
+    button:active {
+      background: #2c2c2c;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* Button Container */
+    .button-container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .game-button {
+      background: #ffffff;
+      border: 2px solid #ffe0ec;
+      padding: 14px 32px;
+      font-size: 1em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #666;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      min-width: 140px;
+      justify-content: center;
+    }
+
+    .game-button:hover,
+    .game-button:active {
+      background: #fff9fb;
+      border-color: #ff69b4;
+      color: #2c2c2c;
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.15);
+    }
+
+    /* Sparkle effect */
+    @keyframes sparkle {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff69b4;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      pointer-events: none;
+      animation: sparkle 1s ease-out forwards;
+    }
+
+    /* Responsive - Tablet */
+    @media (max-width: 768px) {
+      #gameWrapper {
+        padding: 25px 15px 15px;
+      }
+
+      .start-title {
+        font-size: 2.2em;
+      }
+
+      h1 {
+        font-size: 1.6em;
+        margin-bottom: 25px;
+      }
+
+      h1::before,
+      h1::after {
+        font-size: 0.5em;
+        left: -30px;
+      }
+
+      h1::after {
+        right: -30px;
+      }
+
+      .game-container {
+        padding: 16px;
+        border-radius: 10px;
+      }
+
+      .grid {
+        gap: 10px;
+      }
+
+      .card {
+        border-radius: 8px;
+      }
+
+      .card::before {
+        font-size: 1.8rem;
+      }
+
+      .popup-content {
+        padding: 40px 45px;
+        font-size: 1.4em;
+      }
+
+      .button-container {
+        gap: 12px;
+        margin-top: 25px;
+      }
+
+      .game-button {
+        padding: 12px 28px;
+        font-size: 0.95em;
+        min-width: 130px;
+      }
+
+      .progress-bar {
+        height: 5px;
+      }
+
+      .deco-circle-1 {
+        width: 220px;
+        height: 220px;
+      }
+
+      .deco-circle-2 {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    /* Responsive - Mobile Large (สำหรับ iPhone Plus, Android ใหญ่) */
+    @media (max-width: 600px) {
+      #gameWrapper {
+        padding: 20px 12px 15px;
+      }
+
+      .start-title {
+        font-size: 2em;
+      }
+
+      .subtitle {
+        font-size: 0.95em;
+      }
+
+      #startScreen button {
+        padding: 16px 50px;
+        font-size: 1.1em;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+      }
+
+      h1::before,
+      h1::after {
+        display: none;
+      }
+
+      .game-container {
+        padding: 14px;
+        max-width: 100%;
+      }
+
+      .grid {
+        gap: 8px;
+      }
+
+      .card {
+        border-width: 1.5px;
+      }
+
+      .card::before {
+        font-size: 1.6rem;
+      }
+
+      .progress-text {
+        font-size: 0.85em;
+      }
+
+      .popup-content {
+        padding: 35px 40px;
+        font-size: 1.3em;
+      }
+
+      .popup-content::before {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+      }
+
+      button {
+        padding: 14px 36px;
+        font-size: 0.95em;
+      }
+
+      .button-container {
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .game-button {
+        padding: 12px 24px;
+        font-size: 0.9em;
+        min-width: 120px;
+      }
+    }
+
+    /* Responsive - Mobile Small (iPhone SE, small Android) */
+    @media (max-width: 480px) {
+      #gameWrapper {
+        padding: 15px 10px 12px;
+      }
+
+      .start-title {
+        font-size: 1.7em;
+      }
+
+      .subtitle {
+        font-size: 0.9em;
+        margin-bottom: 40px;
+      }
+
+      #startScreen button {
+        padding: 14px 45px;
+        font-size: 1em;
+      }
+
+      h1 {
+        font-size: 1.4em;
+        margin-bottom: 18px;
+      }
+
+      .game-container {
+        padding: 12px;
+      }
+
+      .grid {
+        gap: 6px;
+      }
+
+      .card {
+        border-radius: 6px;
+      }
+
+      .card::before {
+        font-size: 1.4rem;
+      }
+
+      .progress-container {
+        margin-bottom: 20px;
+      }
+
+      .progress-bar {
+        height: 4px;
+      }
+
+      .progress-text {
+        font-size: 0.8em;
+        margin-top: 10px;
+      }
+
+      .popup-content {
+        padding: 30px 35px;
+        font-size: 1.2em;
+        border-radius: 10px;
+      }
+
+      .popup-content::before {
+        font-size: 2.2em;
+        margin-bottom: 12px;
+      }
+
+      button {
+        padding: 12px 32px;
+        font-size: 0.9em;
+      }
+
+      .button-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .game-button {
+        width: 100%;
+        max-width: 280px;
+        padding: 12px 20px;
+        font-size: 0.9em;
+      }
+
+      .deco-circle {
+        display: none;
+      }
+    }
+
+    /* Responsive - Very Small Mobile (< 380px) - 3x3 Grid */
+    @media (max-width: 380px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .start-title {
+        font-size: 1.5em;
+      }
+
+      h1 {
+        font-size: 1.3em;
+      }
+
+      .card::before {
+        font-size: 1.5rem;
+      }
+
+      .progress-text {
+        font-size: 0.75em;
+      }
+
+      .popup-content {
+        padding: 25px 30px;
+        font-size: 1.1em;
+      }
+
+      .game-button {
+        font-size: 0.85em;
+        padding: 11px 18px;
+      }
+    }
+
+    /* Landscape mode optimization for mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+      #gameWrapper {
+        padding: 15px 10px;
+      }
+
+      h1 {
+        font-size: 1.3em;
+        margin-bottom: 15px;
+      }
+
+      .progress-container {
+        margin-bottom: 15px;
+      }
+
+      .game-container {
+        padding: 10px;
+      }
+
+      .button-container {
+        margin-top: 15px;
+        flex-direction: row;
+      }
+
+      .game-button {
+        padding: 10px 20px;
+        font-size: 0.85em;
+      }
+
+      .popup-content {
+        padding: 25px 35px;
+        font-size: 1.1em;
+      }
+
+      #startScreen {
+        padding: 15px;
+      }
+
+      .start-title {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+      }
+
+      .subtitle {
+        margin-bottom: 30px;
+      }
+
+      .start-title::after {
+        top: -30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Hearts Background -->
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <div class="deco-circle deco-circle-1"></div>
+    <div class="deco-circle deco-circle-2"></div>
+    
+    <div class="start-title">Memory Match</div>
+    <div class="subtitle">เกมส์มีเสียงพื้นหลังนะคะ</div>
+    <button id="startButton" onclick="startGame()">เริ่มเกม</button>
+  </div>
+
+  <!-- Game Wrapper -->
+  <div id="gameWrapper">
+    <audio id="bgMusic" loop>
+      <source src="https://media.vocaroo.com/mp3/1jjmChdVNrWH" type="audio/mpeg">
+    </audio>
+
+    <h1>เกมจับคู่ภาพ</h1>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">0 / 8 คู่</div>
+    </div>
+
+    <div class="game-container">
+      <div class="grid" id="gameGrid"></div>
+    </div>
+
+    <div class="button-container">
+      <button class="game-button" onclick="backToMenu()">
+        <span>← ย้อนกลับ</span>
+      </button>
+      <button class="game-button" onclick="resetGame()">
+        <span>⟳ เริ่มใหม่</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      เก่งมากเลย!<br>
+      จับคู่ได้ครบทั้งหมดแล้ว 💕<br>
+      <button onclick="startGame()">เล่นอีกครั้ง</button>
+    </div>
+  </div>
+
+  <script>
+    const images = [
+      "game1.png", "game2.png", "game3.png", "game4.png", 
+      "game5.png", "game6.png", "game7.png", "game8.png"
+    ];
+
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let matchedCount = 0;
+    let totalPairs = images.length;
+    let currentImages = [...images];
+
+    // Adjust game for screen size
+    function adjustGameForScreen() {
+      const screenWidth = window.innerWidth;
+      
+      // For very small screens (< 380px), use 3x3 grid with 4 pairs + 1 single (9 cards)
+      if (screenWidth < 380) {
+        currentImages = images.slice(0, 4);
+        currentImages.push(images[4]); // Add one more for 9 cards total
+        totalPairs = 4;
+      } else {
+        currentImages = [...images];
+        totalPairs = images.length;
+      }
+    }
+
+    // Create sparkle effect
+    function createSparkles(element) {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 6; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = centerX + 'px';
+        sparkle.style.top = centerY + 'px';
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1000);
+      }
+    }
+
+    function updateProgress() {
+      const percentage = (matchedCount / totalPairs) * 100;
+      document.getElementById('progressFill').style.width = percentage + '%';
+      document.getElementById('progressText').textContent = `${matchedCount} / ${totalPairs} คู่ (${Math.round(percentage)}%)`;
+    }
+
+    function startGame() {
+      // Play background music
+      const bgMusic = document.getElementById("bgMusic");
+      bgMusic.play().catch(err => {
+        console.log("Audio autoplay prevented:", err);
+      });
+
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("gameWrapper").style.display = "flex";
+
+      // Adjust game for current screen size
+      adjustGameForScreen();
+
+      const gameGrid = document.getElementById("gameGrid");
+      gameGrid.innerHTML = "";
+      matchedCount = 0;
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+
+      updateProgress();
+
+      let cards = [...currentImages, ...currentImages].sort(() => 0.5 - Math.random());
+
+      cards.forEach(src => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.image = src;
+
+        const img = document.createElement("img");
+        img.src = src;
+
+        card.appendChild(img);
+        gameGrid.appendChild(card);
+
+        card.addEventListener("click", handleCardClick);
+      });
+    }
+
+    function handleCardClick(e) {
+      const card = e.currentTarget;
+      
+      if (lockBoard || card.classList.contains("flipped") || card.classList.contains("matched")) return;
+
+      card.classList.add("flipped");
+
+      if (!firstCard) {
+        firstCard = card;
+      } else {
+        secondCard = card;
+        lockBoard = true;
+
+        if (firstCard.dataset.image === secondCard.dataset.image) {
+          firstCard.classList.add("matched");
+          secondCard.classList.add("matched");
+          
+          // Create sparkle effect for both cards
+          createSparkles(firstCard);
+          createSparkles(secondCard);
+          
+          matchedCount++;
+          updateProgress();
+
+          // Check win condition
+          if (matchedCount >= totalPairs) {
+            setTimeout(() => {
+              document.getElementById("popup").style.display = "flex";
+            }, 500);
+          }
+
+          resetBoard();
+        } else {
+          setTimeout(() => {
+            firstCard.classList.remove("flipped");
+            secondCard.classList.remove("flipped");
+            resetBoard();
+          }, 800);
+        }
+      }
+    }
+
+    function resetBoard() {
+      [firstCard, secondCard] = [null, null];
+      lockBoard = false;
+    }
+
+    function backToMenu() {
+      window.location.href = 'game-menu.html';
+    }
+
+    function resetGame() {
+      if (confirm('ต้องการเริ่มเกมใหม่?\nความคืบหน้าจะถูกรีเซ็ต')) {
+        startGame();
+      }
+    }
+
+    // Handle orientation and resize changes
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        // Only restart if game is active and size changed significantly
+        const gameWrapper = document.getElementById("gameWrapper");
+        if (gameWrapper.style.display === "flex") {
+          const oldPairs = totalPairs;
+          adjustGameForScreen();
+          if (oldPairs !== totalPairs) {
+            if (confirm('ขนาดหน้าจอเปลี่ยน ต้องการเริ่มเกมใหม่หรือไม่?')) {
+              startGame();
+            }
+          }
+        }
+      }, 500);
+    });
+
+    window.onload = () => {
+      document.getElementById("gameWrapper").style.display = "none";
+      document.getElementById("popup").style.display = "none";
+      adjustGameForScreen();
+    };
+
+    // Prevent pull-to-refresh on mobile
+    document.body.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Prevent double-tap zoom
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+  </script>
+</body>
+</html>

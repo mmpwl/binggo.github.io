@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>เกมจิ๊กซอภาพคู่รัก 16 ชิ้น</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Prompt', sans-serif;
+      background: #fafafa;
+      overflow-x: hidden;
+      touch-action: pan-y;
+    }
+
+    /* Floating Hearts Background */
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .heart-bg {
+      position: fixed;
+      font-size: 20px;
+      color: #ff69b4;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatUp 20s infinite ease-in-out;
+    }
+
+    .heart-bg:nth-child(1) { left: 5%; animation-delay: 0s; font-size: 15px; }
+    .heart-bg:nth-child(2) { left: 15%; animation-delay: 3s; font-size: 25px; }
+    .heart-bg:nth-child(3) { left: 25%; animation-delay: 6s; font-size: 18px; }
+    .heart-bg:nth-child(4) { left: 35%; animation-delay: 9s; font-size: 22px; }
+    .heart-bg:nth-child(5) { left: 45%; animation-delay: 12s; font-size: 16px; }
+    .heart-bg:nth-child(6) { left: 55%; animation-delay: 2s; font-size: 24px; }
+    .heart-bg:nth-child(7) { left: 65%; animation-delay: 5s; font-size: 19px; }
+    .heart-bg:nth-child(8) { left: 75%; animation-delay: 8s; font-size: 21px; }
+    .heart-bg:nth-child(9) { left: 85%; animation-delay: 11s; font-size: 17px; }
+    .heart-bg:nth-child(10) { left: 95%; animation-delay: 4s; font-size: 23px; }
+
+    /* Start Screen */
+    #startScreen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100%;
+      background: linear-gradient(to bottom, #ffffff 0%, #fff5f8 100%);
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    .start-title {
+      font-size: clamp(2em, 8vw, 3em);
+      font-weight: 400;
+      color: #2c2c2c;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      animation: fadeInDown 0.8s ease;
+      position: relative;
+      text-align: center;
+    }
+
+    .start-title::after {
+      content: '♥';
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.6em;
+      color: #ff69b4;
+      opacity: 0.7;
+      animation: heartPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes heartPulse {
+      0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateX(-50%) scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    .subtitle {
+      font-size: clamp(0.85em, 3vw, 1em);
+      font-weight: 300;
+      color: #999;
+      margin-bottom: 50px;
+      letter-spacing: 1px;
+      animation: fadeInDown 0.8s ease 0.2s backwards;
+      text-align: center;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #startScreen button {
+      font-size: clamp(1em, 4vw, 1.2em);
+      font-weight: 400;
+      padding: 18px 60px;
+      border-radius: 50px;
+      border: 2px solid #2c2c2c;
+      background: #ffffff;
+      color: #2c2c2c;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      animation: fadeInUp 0.8s ease 0.4s backwards;
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    #startScreen button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 105, 180, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    #startScreen button:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #startScreen button:active {
+      background: #2c2c2c;
+      color: #ffffff;
+      transform: scale(0.98);
+    }
+
+    /* Decorative Elements */
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 105, 180, 0.15);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .deco-circle-1 {
+      width: clamp(150px, 30vw, 300px);
+      height: clamp(150px, 30vw, 300px);
+      top: 10%;
+      right: 5%;
+    }
+
+    .deco-circle-2 {
+      width: clamp(100px, 20vw, 200px);
+      height: clamp(100px, 20vw, 200px);
+      bottom: 15%;
+      left: 5%;
+      animation-direction: reverse;
+    }
+
+    /* Game Wrapper */
+    #gameWrapper {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: clamp(20px, 5vw, 40px) 15px;
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #fafafa 0%, #fff5f8 100%);
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      color: #2c2c2c;
+      font-size: clamp(1.4em, 5vw, 2em);
+      font-weight: 400;
+      margin-bottom: 10px;
+      text-align: center;
+      letter-spacing: 1px;
+      animation: fadeIn 0.6s ease;
+      position: relative;
+      padding: 0 15px;
+    }
+
+    h1::before,
+    h1::after {
+      content: '♡';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.6em;
+      color: #ff69b4;
+      opacity: 0.5;
+    }
+
+    h1::before {
+      left: -30px;
+    }
+
+    h1::after {
+      right: -30px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Image Selector */
+    #imageSelector {
+      display: flex;
+      gap: clamp(10px, 3vw, 20px);
+      margin-bottom: clamp(20px, 5vw, 40px);
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeIn 0.8s ease 0.2s backwards;
+      padding: 0 10px;
+      width: 100%;
+    }
+
+    .thumbnail {
+      width: clamp(90px, 28vw, 140px);
+      height: clamp(90px, 28vw, 140px);
+      object-fit: cover;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      filter: grayscale(100%);
+      opacity: 0.6;
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .thumbnail::after {
+      content: '♥';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: clamp(2em, 8vw, 3em);
+      color: #ff69b4;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnail:active::after {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.7;
+    }
+
+    .thumbnail:active {
+      filter: grayscale(0%);
+      opacity: 1;
+      transform: scale(0.95);
+    }
+
+    .thumbnail.selected {
+      border-color: #ff69b4;
+      filter: grayscale(0%);
+      opacity: 1;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    }
+
+    /* Game Container */
+    #gameContainer {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(15px, 4vw, 30px);
+      align-items: center;
+      animation: fadeIn 1s ease 0.4s backwards;
+      width: 100%;
+    }
+
+    .columnLayout {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(15px, 4vw, 40px);
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    #puzzleBoard, #pieceContainer {
+      width: min(340px, calc(100vw - 30px));
+      height: min(340px, calc(100vw - 30px));
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 3px;
+      background: #ffffff;
+      border: 1px solid #ffe0ec;
+      border-radius: 4px;
+      padding: 10px;
+      transition: all 0.3s ease;
+    }
+
+    #puzzleBoard {
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.1);
+    }
+
+    #pieceContainer {
+      background: #fff9fb;
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.08);
+    }
+
+    .piece {
+      width: 100%;
+      height: 100%;
+      background-size: calc(100% * 4 - 3px) calc(100% * 4 - 3px);
+      background-repeat: no-repeat;
+      cursor: grab;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+      position: relative;
+      touch-action: none;
+    }
+
+    .piece:active {
+      cursor: grabbing;
+      transform: scale(1.05);
+      z-index: 100;
+      opacity: 0.8;
+    }
+
+    .dropzone {
+      background: #fff9fb;
+      border: 1px dashed #ffe0ec;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .dropzone::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle, rgba(255, 105, 180, 0.3), transparent);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .dropzone.drag-over {
+      background: #fff;
+      border-color: #ff69b4;
+    }
+
+    .dropzone.drag-over::after {
+      transform: translate(-50%, -50%) scale(2);
+    }
+
+    /* Popup */
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: #ffffff;
+      border: 1px solid #ffe0ec;
+      padding: clamp(40px, 10vw, 60px) clamp(50px, 12vw, 80px);
+      text-align: center;
+      font-size: clamp(1.2em, 4vw, 1.6em);
+      font-weight: 400;
+      color: #2c2c2c;
+      z-index: 1000;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(255, 105, 180, 0.2);
+      animation: popupShow 0.4s ease forwards;
+      letter-spacing: 1px;
+      max-width: 90vw;
+    }
+
+    @keyframes popupShow {
+      to {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    #popup::before {
+      content: '♥';
+      font-size: clamp(2em, 8vw, 3em);
+      display: block;
+      margin-bottom: 20px;
+      color: #ff69b4;
+      font-weight: 300;
+      animation: heartbeat 1s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      25% {
+        transform: scale(1.2);
+      }
+      50% {
+        transform: scale(1);
+      }
+      75% {
+        transform: scale(1.1);
+      }
+    }
+
+    button {
+      margin-top: 20px;
+      padding: clamp(12px, 3vw, 14px) clamp(30px, 8vw, 40px);
+      background: #ffffff;
+      color: #2c2c2c;
+      border: 2px solid #2c2c2c;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: clamp(0.9em, 3vw, 1em);
+      font-weight: 400;
+      transition: all 0.3s ease;
+      font-family: 'Prompt', sans-serif;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 105, 180, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:active {
+      background: #2c2c2c;
+      color: #ffffff;
+      transform: scale(0.98);
+    }
+
+    /* Overlay */
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 999;
+    }
+
+    /* Progress Indicator */
+    .progress-container {
+      width: 100%;
+      max-width: min(720px, calc(100vw - 30px));
+      margin-bottom: clamp(20px, 5vw, 30px);
+      animation: fadeIn 1s ease 0.6s backwards;
+      padding: 0 15px;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: #ffe0ec;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff69b4, #ff85c0);
+      border-radius: 2px;
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .progress-text {
+      text-align: center;
+      color: #666;
+      font-weight: 400;
+      margin-top: 12px;
+      font-size: clamp(0.8em, 2.5vw, 0.9em);
+      letter-spacing: 0.5px;
+    }
+
+    /* Button Container */
+    .button-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: clamp(10px, 3vw, 15px);
+      margin-top: clamp(20px, 5vw, 40px);
+      flex-wrap: wrap;
+      padding: 0 15px;
+    }
+
+    .game-button {
+      background: #ffffff;
+      border: 2px solid #ffe0ec;
+      padding: clamp(10px, 2.5vw, 12px) clamp(20px, 5vw, 30px);
+      font-size: clamp(0.85em, 2.5vw, 1em);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #666;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      justify-content: center;
+      min-width: clamp(120px, 35vw, 150px);
+    }
+
+    .game-button:active {
+      background: #fff9fb;
+      border-color: #ff69b4;
+      color: #2c2c2c;
+      transform: scale(0.98);
+    }
+
+    /* Correct Piece Style */
+    .piece.correct {
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.4) !important;
+      opacity: 1;
+      animation: correctPulse 0.6s ease;
+    }
+
+    @keyframes correctPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Sparkle effect */
+    @keyframes sparkle {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff69b4;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      pointer-events: none;
+      animation: sparkle 1s ease-out forwards;
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      h1::before,
+      h1::after {
+        display: none;
+      }
+
+      .heart-bg {
+        font-size: 15px;
+      }
+
+      .columnLayout {
+        gap: 20px;
+      }
+
+      .thumbnail {
+        animation: none;
+      }
+
+      /* Prevent hover effects on touch devices */
+      .thumbnail:hover::after,
+      .dropzone:hover::after,
+      .game-button:hover {
+        transform: none;
+        background: inherit;
+        border-color: inherit;
+        color: inherit;
+        box-shadow: none;
+      }
+
+      .thumbnail:hover {
+        filter: inherit;
+        opacity: inherit;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    /* Extra small screens */
+    @media (max-width: 400px) {
+      .start-title::after {
+        top: -20px;
+        font-size: 0.5em;
+      }
+
+      #startScreen button {
+        padding: 15px 40px;
+      }
+
+      #popup {
+        padding: 30px 40px;
+      }
+
+      .button-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .game-button {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    /* Landscape mobile */
+    @media (max-width: 900px) and (orientation: landscape) {
+      #gameWrapper {
+        padding: 15px 10px;
+      }
+
+      h1 {
+        font-size: 1.3em;
+        margin-bottom: 5px;
+      }
+
+      #imageSelector {
+        margin-bottom: 15px;
+      }
+
+      .columnLayout {
+        flex-direction: row;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      #puzzleBoard, #pieceContainer {
+        width: min(280px, calc(48vw - 15px));
+        height: min(280px, calc(48vw - 15px));
+      }
+
+      .progress-container {
+        margin-bottom: 15px;
+      }
+
+      .button-container {
+        margin-top: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Hearts Background -->
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+  <div class="heart-bg">♥</div>
+
+  <div id="startScreen">
+    <div class="deco-circle deco-circle-1"></div>
+    <div class="deco-circle deco-circle-2"></div>
+    
+    <div class="start-title">Jigsaw Puzzle</div>
+    <div class="subtitle">เกมส์มีเสียงพื้นหลังนะคะ</div>
+    <button id="startBtn">เริ่มเกม</button>
+  </div>
+
+  <div id="gameWrapper">
+    <audio id="bgm" loop></audio>
+
+    <h1>เกมจิ๊กซอ 16 ชิ้น</h1>
+
+    <div id="imageSelector">
+      <img src="image1.jpg" class="thumbnail" onclick="startGame(this, 'image1.jpg')" alt="ภาพ 1" />
+      <img src="image2.jpg" class="thumbnail" onclick="startGame(this, 'image2.jpg')" alt="ภาพ 2" />
+      <img src="image3.jpg" class="thumbnail" onclick="startGame(this, 'image3.jpg')" alt="ภาพ 3" />
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">เลือกภาพเพื่อเริ่มเล่น</div>
+    </div>
+
+    <div id="gameContainer">
+      <div class="columnLayout">
+        <div id="puzzleBoard"></div>
+        <div id="pieceContainer"></div>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button id="backBtn" class="game-button">
+        ← ย้อนกลับ
+      </button>
+      <button id="restartBtn" class="game-button">
+        ⟳ เริ่มใหม่
+      </button>
+    </div>
+  </div>
+
+  <div id="overlay"></div>
+  <div id="popup">
+    เสร็จสมบูรณ์แล้ว<br />
+    <button onclick="resetGame()">เล่นอีกครั้ง</button>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const startScreen = document.getElementById('startScreen');
+    const gameWrapper = document.getElementById('gameWrapper');
+    const bgm = document.getElementById('bgm');
+    const overlay = document.getElementById('overlay');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
+    startBtn.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      gameWrapper.style.display = 'flex';
+      bgm.src = "https://media.vocaroo.com/mp3/1b0a8d0p6mNx";
+      bgm.play();
+    });
+
+    const backBtn = document.getElementById('backBtn');
+    backBtn.addEventListener('click', () => {
+      window.location.href = "game-menu.html";
+    });
+
+    const restartBtn = document.getElementById('restartBtn');
+    restartBtn.addEventListener('click', () => {
+      if (confirm('ต้องการเริ่มเกมใหม่ทั้งหมด?\nความคืบหน้าจะถูกรีเซ็ต')) {
+        for (const key in completedPuzzles) {
+          delete completedPuzzles[key];
+        }
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+        document.getElementById('gameContainer').style.display = 'none';
+        document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
+        currentImage = null;
+        progressFill.style.width = '0%';
+        progressText.textContent = 'เลือกภาพเพื่อเริ่มเล่น';
+      }
+    });
+
+    const rows = 4;
+    const cols = 4;
+    const totalPieces = rows * cols;
+
+    const puzzleBoard = document.getElementById('puzzleBoard');
+    const pieceContainer = document.getElementById('pieceContainer');
+    const popup = document.getElementById('popup');
+
+    let dragged;
+    let correct = 0;
+    let touchStartX, touchStartY;
+    let touchPiece = null;
+
+    const completedPuzzles = {};
+    const imageList = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
+    let currentImage = null;
+
+    // Touch support for mobile
+    function handleTouchStart(e) {
+      if (e.target.classList.contains('piece') && e.target.draggable) {
+        touchPiece = e.target;
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        
+        touchPiece.style.position = 'fixed';
+        touchPiece.style.zIndex = '1000';
+        touchPiece.style.pointerEvents = 'none';
+        updateTouchPiecePosition(touch.clientX, touch.clientY);
+      }
+    }
+
+    function handleTouchMove(e) {
+      if (touchPiece) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        updateTouchPiecePosition(touch.clientX, touch.clientY);
+        
+        // Highlight dropzones
+        const dropzones = document.querySelectorAll('.dropzone');
+        dropzones.forEach(dz => {
+          const rect = dz.getBoundingClientRect();
+          if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+              touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+            dz.classList.add('drag-over');
+          } else {
+            dz.classList.remove('drag-over');
+          }
+        });
+      }
+    }
+
+    function handleTouchEnd(e) {
+      if (touchPiece) {
+        const touch = e.changedTouches[0];
+        touchPiece.style.position = '';
+        touchPiece.style.zIndex = '';
+        touchPiece.style.pointerEvents = '';
+        
+        // Find dropzone under touch
+        const dropzones = document.querySelectorAll('.dropzone');
+        let targetDropzone = null;
+        
+        dropzones.forEach(dz => {
+          dz.classList.remove('drag-over');
+          const rect = dz.getBoundingClientRect();
+          if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+              touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+            targetDropzone = dz;
+          }
+        });
+        
+        if (targetDropzone && !targetDropzone.hasChildNodes()) {
+          const parent = touchPiece.parentElement;
+          targetDropzone.appendChild(touchPiece);
+          
+          const correctIndex = touchPiece.dataset.index;
+          const dropIndex = targetDropzone.dataset.index;
+
+          if (correctIndex === dropIndex) {
+            correct++;
+            touchPiece.draggable = false;
+            touchPiece.style.cursor = 'default';
+            touchPiece.classList.add('correct');
+            
+            createSparkles(touchPiece);
+
+            if (!completedPuzzles[currentImage]) {
+              completedPuzzles[currentImage] = Array(totalPieces).fill(false);
+            }
+            completedPuzzles[currentImage][correctIndex] = true;
+
+            updateProgress();
+
+            if (allPuzzlesCompleted()) {
+              setTimeout(() => {
+                overlay.style.display = 'block';
+                popup.style.display = 'block';
+              }, 300);
+            }
+          } else {
+            // Return piece to original container if wrong
+            setTimeout(() => {
+              parent.appendChild(touchPiece);
+            }, 300);
+          }
+        }
+        
+        touchPiece = null;
+      }
+    }
+
+    function updateTouchPiecePosition(x, y) {
+      if (touchPiece) {
+        const size = touchPiece.offsetWidth;
+        touchPiece.style.left = (x - size / 2) + 'px';
+        touchPiece.style.top = (y - size / 2) + 'px';
+      }
+    }
+
+    // Add touch listeners
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+    // Create sparkle effect
+    function createSparkles(element) {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 6; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = centerX + 'px';
+        sparkle.style.top = centerY + 'px';
+        
+        const angle = (Math.PI * 2 * i) / 6;
+        const distance = 30 + Math.random() * 20;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        sparkle.style.setProperty('--tx', tx + 'px');
+        sparkle.style.setProperty('--ty', ty + 'px');
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1000);
+      }
+    }
+
+    function updateProgress() {
+      let totalCompleted = 0;
+      let completedImages = 0;
+      const totalPuzzlePieces = imageList.length * totalPieces;
+
+      imageList.forEach(img => {
+        if (completedPuzzles[img]) {
+          totalCompleted += completedPuzzles[img].filter(x => x).length;
+          if (completedPuzzles[img].every(x => x === true)) {
+            completedImages++;
+          }
+        }
+      });
+
+      const percentage = (totalCompleted / totalPuzzlePieces) * 100;
+      progressFill.style.width = percentage + '%';
+      progressText.textContent = `${completedImages}/${imageList.length} ภาพ | ${totalCompleted}/${totalPuzzlePieces} ชิ้น (${Math.round(percentage)}%)`;
+    }
+
+    function startGame(el, imagePath) {
+      document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
+      el.classList.add('selected');
+
+      currentImage = imagePath;
+      document.getElementById('gameContainer').style.display = 'flex';
+
+      puzzleBoard.innerHTML = '';
+      pieceContainer.innerHTML = '';
+      correct = 0;
+
+      for (let i = 0; i < totalPieces; i++) {
+        const dropzone = document.createElement('div');
+        dropzone.classList.add('dropzone');
+        dropzone.dataset.index = i;
+        dropzone.addEventListener('dragover', e => e.preventDefault());
+        dropzone.addEventListener('drop', drop);
+        puzzleBoard.appendChild(dropzone);
+      }
+
+      let completedPieces = completedPuzzles[imagePath] || Array(totalPieces).fill(false);
+      correct = completedPieces.filter(x => x).length;
+
+      completedPieces.forEach((done, index) => {
+        if (done) {
+          const piece = createPiece(imagePath, index);
+          piece.draggable = false;
+          piece.style.cursor = 'default';
+          piece.classList.add('correct');
+          puzzleBoard.children[index].appendChild(piece);
+        }
+      });
+
+      const remainingPieces = [];
+      for (let i = 0; i < totalPieces; i++) {
+        if (!completedPieces[i]) remainingPieces.push(i);
+      }
+
+      remainingPieces.sort(() => Math.random() - 0.5);
+
+      remainingPieces.forEach(i => {
+        const piece = createPiece(imagePath, i);
+        piece.draggable = true;
+        piece.dataset.index = i;
+        piece.addEventListener('dragstart', drag);
+        pieceContainer.appendChild(piece);
+      });
+
+      updateProgress();
+
+      if (allPuzzlesCompleted()) {
+        setTimeout(() => {
+          overlay.style.display = 'block';
+          popup.style.display = 'block';
+        }, 300);
+      } else {
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+      }
+    }
+
+    function createPiece(imagePath, index) {
+      const piece = document.createElement('div');
+      piece.classList.add('piece');
+      piece.style.backgroundImage = `url('${imagePath}')`;
+      
+      // Calculate background position as percentage
+      const xPercent = (index % cols) * (100 / (cols - 1));
+      const yPercent = Math.floor(index / cols) * (100 / (rows - 1));
+      piece.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
+      
+      piece.dataset.index = index;
+      return piece;
+    }
+
+    function drag(e) {
+      dragged = e.target;
+    }
+
+    function drop(e) {
+      if (!e.target.hasChildNodes()) {
+        e.target.appendChild(dragged);
+        const correctIndex = dragged.dataset.index;
+        const dropIndex = e.target.dataset.index;
+
+        if (correctIndex === dropIndex) {
+          correct++;
+          dragged.draggable = false;
+          dragged.style.cursor = 'default';
+          dragged.classList.add('correct');
+          
+          createSparkles(dragged);
+
+          if (!completedPuzzles[currentImage]) {
+            completedPuzzles[currentImage] = Array(totalPieces).fill(false);
+          }
+          completedPuzzles[currentImage][correctIndex] = true;
+
+          updateProgress();
+
+          if (allPuzzlesCompleted()) {
+            setTimeout(() => {
+              overlay.style.display = 'block';
+              popup.style.display = 'block';
+            }, 300);
+          }
+        }
+      }
+    }
+
+    function allPuzzlesCompleted() {
+      return imageList.every(img => {
+        if (!completedPuzzles[img]) return false;
+        return completedPuzzles[img].every(x => x === true);
+      });
+    }
+
+    function resetGame() {
+      for (const key in completedPuzzles) {
+        delete completedPuzzles[key];
+      }
+      overlay.style.display = 'none';
+      popup.style.display = 'none';
+      bgm.pause();
+      bgm.currentTime = 0;
+      location.reload();
+    }
+  </script>
+</body>
+</html>

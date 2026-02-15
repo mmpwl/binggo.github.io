@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>เลือกเกม</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #ffe0f0, #e0f7ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 30px 20px;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #ff66aa;
+      margin-bottom: 24px;
+    }
+
+    .game-menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .game-button {
+      background: #ffccdd;
+      border: none;
+      border-radius: 16px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: #333;
+      box-shadow: 0 4px 12px rgba(255, 102, 170, 0.2);
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .game-button:hover {
+      background: #ffaac0;
+      transform: translateY(-4px);
+    }
+
+    .game-button img {
+      width: 70px;
+      height: 70px;
+      margin-bottom: 6px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .game-button div {
+      font-size: 14px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #cdb4db, #a2d2ff);
+      border-radius: 30px;
+      text-decoration: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 6px 16px rgba(100, 100, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .back-link::before {
+      content: "← ";
+      margin-right: 6px;
+    }
+
+    .back-link:hover {
+      background: linear-gradient(135deg, #b5aad7, #94d4ff);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .game-button img {
+        width: 60px;
+        height: 60px;
+      }
+
+      .game-button div {
+        font-size: 13px;
+      }
+
+      .back-link {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>เลือกเกมของคุณ</h1>
+    <div class="game-menu">
+      <a href="game1.html" class="game-button">
+        <img src="game-menu1.png" alt="เกม 1">
+        <div>Jigsaw Puzzle</div>
+      </a>
+      <a href="game2.html" class="game-button">
+        <img src="game-menu2.png" alt="เกม 2">
+        <div>Memory Match</div>
+      </a>
+      </a>
+    </div>
+    <a href="menu.html" class="back-link">กลับ</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Birthday Surprise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400&family=Sarabun:wght@200;300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #faf7f5 0%, #f5ede9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #ffffff, #fdfbfa);
+            border: 1px solid rgba(210, 180, 170, 0.3);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 16px;
+            color: #d2b4aa;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(210, 180, 170, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .back-button:hover {
+            transform: translateX(-3px) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(210, 180, 170, 0.3);
+            background: linear-gradient(135deg, #f9f5f3, #ffffff);
+        }
+
+        .back-button:active {
+            transform: translateX(-2px) translateY(-1px);
+        }
+
+        /* Floating particles background */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(210, 180, 170, 0.6), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20px) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* PIN Screen */
+        .pin-screen {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 50px 45px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(210, 180, 170, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+
+        .pin-screen::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, #f5d5ce, #e8d5d3, #f9e5e0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+
+        .pin-screen h1 {
+            font-family: 'Mitr', sans-serif;
+            background: linear-gradient(135deg, #d2b4aa, #c19a8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .pin-screen p {
+            color: #9d8b82;
+            margin-bottom: 35px;
+            font-size: 1em;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .pin-input {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .pin-digit {
+            width: 55px;
+            height: 55px;
+            font-size: 26px;
+            text-align: center;
+            border: 2px solid #e8d5d3;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #ffffff, #fdfbfa);
+            color: #d2b4aa;
+            font-family: 'Sarabun', sans-serif;
+            box-shadow: 0 2px 8px rgba(210, 180, 170, 0.1);
+        }
+
+        .pin-digit:focus {
+            border-color: #d2b4aa;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(210, 180, 170, 0.25);
+        }
+
+        .error-message {
+            color: #d89b92;
+            margin-top: 15px;
+            font-size: 0.9em;
+            min-height: 20px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Birthday Card Screen */
+        .birthday-card {
+            display: none;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .birthday-card.active {
+            display: block;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .cake-container {
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: inline-block;
+            filter: drop-shadow(0 25px 50px rgba(210, 180, 170, 0.3));
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .cake-container:hover {
+            transform: scale(1.08) translateY(-10px);
+            filter: drop-shadow(0 35px 60px rgba(210, 180, 170, 0.4));
+        }
+
+        .cake-container:active {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .cake-svg {
+            width: 300px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes flicker {
+            0%, 100% { 
+                transform: scale(1) translateY(0); 
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(0.95) translateY(-3px); 
+                opacity: 0.85;
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 8px rgba(255, 200, 100, 0.8));
+            }
+            50% { 
+                filter: drop-shadow(0 0 15px rgba(255, 220, 120, 1));
+            }
+        }
+
+        .flame {
+            animation: flicker 1.5s infinite ease-in-out;
+            transform-origin: center bottom;
+        }
+
+        .candle-glow {
+            animation: glow 1.5s infinite ease-in-out;
+        }
+
+        .click-hint {
+            background: linear-gradient(135deg, #d2b4aa, #c19a8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.05em;
+            font-weight: 300;
+            margin-top: 35px;
+            animation: pulse 2.5s infinite ease-in-out;
+            letter-spacing: 0.8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.98); }
+        }
+
+        /* Birthday Message */
+        .birthday-message {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 50px 45px;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(210, 180, 170, 0.25);
+            max-width: 500px;
+            margin: 0 20px;
+            position: relative;
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .birthday-message::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, #f5d5ce, #e8d5d3, #f9e5e0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+
+        .birthday-message.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .birthday-message h1 {
+            font-family: 'Mitr', sans-serif;
+            background: linear-gradient(135deg, #d2b4aa, #c19a8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.2em;
+            font-weight: 400;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .birthday-message p {
+            color: #7a6866;
+            font-size: 1.05em;
+            line-height: 2;
+            margin-bottom: 12px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .birthday-message .signature {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #d2b4aa, #c19a8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.1em;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: linear-gradient(135deg, #f9f5f3, #ffffff);
+            border: 1px solid rgba(210, 180, 170, 0.2);
+            font-size: 28px;
+            color: #c9b3aa;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(210, 180, 170, 0.1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .close-button:hover {
+            background: linear-gradient(135deg, #f5ede9, #faf7f5);
+            color: #9d8b82;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 4px 12px rgba(210, 180, 170, 0.2);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            animation: confetti-fall linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Music Control */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #ffffff, #fdfbfa);
+            border: 1px solid rgba(210, 180, 170, 0.3);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(210, 180, 170, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d2b4aa;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .music-control:hover {
+            transform: scale(1.15) translateY(-3px);
+            box-shadow: 0 12px 35px rgba(210, 180, 170, 0.3);
+        }
+
+        .music-control:active {
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Tablet and Mobile Landscape */
+        @media (max-width: 768px) {
+            .pin-screen {
+                padding: 40px 30px;
+                width: 85%;
+            }
+
+            .birthday-message {
+                padding: 40px 30px;
+                width: 85%;
+            }
+
+            .pin-screen h1 {
+                font-size: 1.6em;
+                margin-bottom: 12px;
+            }
+
+            .pin-screen p {
+                font-size: 0.95em;
+                margin-bottom: 30px;
+            }
+
+            .birthday-message h1 {
+                font-size: 1.9em;
+                margin-bottom: 20px;
+            }
+
+            .birthday-message p {
+                font-size: 1em;
+                line-height: 1.85;
+            }
+
+            .cake-svg {
+                width: 240px;
+            }
+
+            .click-hint {
+                font-size: 1em;
+                margin-top: 30px;
+            }
+
+            .back-button {
+                padding: 10px 18px;
+                font-size: 14px;
+                top: 18px;
+                left: 18px;
+            }
+
+            .music-control {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+                bottom: 25px;
+                right: 25px;
+            }
+        }
+
+        /* Mobile Portrait */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .pin-screen {
+                padding: 35px 25px;
+                width: 90%;
+                max-width: none;
+            }
+
+            .birthday-message {
+                padding: 35px 25px;
+                width: 90%;
+                max-width: none;
+                margin: 0 15px;
+            }
+
+            .pin-screen h1 {
+                font-size: 1.4em;
+                margin-bottom: 10px;
+            }
+
+            .pin-screen p {
+                font-size: 0.9em;
+                margin-bottom: 25px;
+            }
+
+            .pin-input {
+                gap: 10px;
+            }
+
+            .pin-digit {
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
+            }
+
+            .error-message {
+                font-size: 0.85em;
+            }
+
+            .birthday-message h1 {
+                font-size: 1.6em;
+                margin-bottom: 18px;
+            }
+
+            .birthday-message p {
+                font-size: 0.95em;
+                line-height: 1.8;
+                margin-bottom: 10px;
+            }
+
+            .birthday-message .signature {
+                font-size: 1em;
+                margin-top: 25px;
+            }
+
+            .cake-svg {
+                width: 200px;
+            }
+
+            .click-hint {
+                font-size: 0.9em;
+                margin-top: 25px;
+            }
+
+            .back-button {
+                padding: 8px 14px;
+                font-size: 13px;
+                top: 12px;
+                left: 12px;
+            }
+
+            .music-control {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .close-button {
+                width: 36px;
+                height: 36px;
+                font-size: 26px;
+                top: 15px;
+                right: 15px;
+            }
+        }
+
+        /* Very Small Mobile */
+        @media (max-width: 360px) {
+            .pin-screen {
+                padding: 30px 20px;
+            }
+
+            .birthday-message {
+                padding: 30px 20px;
+                margin: 0 10px;
+            }
+
+            .pin-input {
+                gap: 8px;
+            }
+
+            .pin-digit {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+
+            .pin-screen h1 {
+                font-size: 1.3em;
+            }
+
+            .birthday-message h1 {
+                font-size: 1.4em;
+            }
+
+            .birthday-message p {
+                font-size: 0.9em;
+            }
+
+            .cake-svg {
+                width: 180px;
+            }
+
+            .back-button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .pin-screen {
+                padding: 25px 30px;
+            }
+
+            .birthday-message {
+                padding: 25px 30px;
+                max-height: 90vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .cake-svg {
+                width: 180px;
+            }
+
+            .click-hint {
+                margin-top: 15px;
+            }
+
+            .music-control {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .back-button {
+                top: 10px;
+                left: 10px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Fix for iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            .pin-digit:focus {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="menu.html" class="back-button">← กลับ</a>
+
+    <!-- Floating particles -->
+    <script>
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 8) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(particle);
+        }
+    </script>
+
+    <!-- PIN Screen -->
+    <div class="pin-screen" id="pinScreen">
+        <h1>Birthday Surprise</h1>
+        <p>กรุณาใส่รหัส PIN เพื่อเปิดของขวัญพิเศษ</p>
+        <div class="pin-input">
+            <input type="password" maxlength="1" class="pin-digit" id="pin1" pattern="[0-9]" inputmode="numeric">
+            <input type="password" maxlength="1" class="pin-digit" id="pin2" pattern="[0-9]" inputmode="numeric">
+            <input type="password" maxlength="1" class="pin-digit" id="pin3" pattern="[0-9]" inputmode="numeric">
+            <input type="password" maxlength="1" class="pin-digit" id="pin4" pattern="[0-9]" inputmode="numeric">
+        </div>
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <!-- Birthday Card Screen -->
+    <div class="birthday-card" id="birthdayCard">
+        <div class="cake-container" id="cakeContainer">
+            <svg class="cake-svg" viewBox="0 0 300 350" xmlns="http://www.w3.org/2000/svg">
+                <!-- Cake shadow -->
+                <ellipse cx="150" cy="330" rx="120" ry="15" fill="rgba(210, 180, 170, 0.2)" />
+                
+                <!-- Bottom tier -->
+                <ellipse cx="150" cy="280" rx="110" ry="20" fill="#f5d5ce" />
+                <rect x="40" y="280" width="220" height="45" fill="#f0c8c0" />
+                <ellipse cx="150" cy="325" rx="110" ry="20" fill="#e8bdb5" />
+                
+                <!-- Bottom tier decorations -->
+                <circle cx="70" cy="302" r="8" fill="#ffc0cb" opacity="0.7" />
+                <circle cx="110" cy="302" r="8" fill="#ffc0cb" opacity="0.7" />
+                <circle cx="150" cy="302" r="8" fill="#ffc0cb" opacity="0.7" />
+                <circle cx="190" cy="302" r="8" fill="#ffc0cb" opacity="0.7" />
+                <circle cx="230" cy="302" r="8" fill="#ffc0cb" opacity="0.7" />
+                
+                <!-- Middle tier -->
+                <ellipse cx="150" cy="220" rx="85" ry="17" fill="#fde5df" />
+                <rect x="65" y="220" width="170" height="60" fill="#fcd9d0" />
+                <ellipse cx="150" cy="280" rx="85" ry="17" fill="#f5cfc5" />
+                
+                <!-- Middle tier frosting drips -->
+                <path d="M 65 230 Q 70 240, 65 250 L 65 250 Z" fill="#ffc0cb" opacity="0.6" />
+                <path d="M 100 230 Q 105 245, 100 255 L 100 255 Z" fill="#ffc0cb" opacity="0.6" />
+                <path d="M 150 230 Q 155 245, 150 255 L 150 255 Z" fill="#ffc0cb" opacity="0.6" />
+                <path d="M 200 230 Q 205 245, 200 255 L 200 255 Z" fill="#ffc0cb" opacity="0.6" />
+                <path d="M 235 230 Q 240 240, 235 250 L 235 250 Z" fill="#ffc0cb" opacity="0.6" />
+                
+                <!-- Top tier -->
+                <ellipse cx="150" cy="170" rx="60" ry="13" fill="#fff0f0" />
+                <rect x="90" y="170" width="120" height="50" fill="#ffe8e8" />
+                <ellipse cx="150" cy="220" rx="60" ry="13" fill="#ffd9d9" />
+                
+                <!-- Top tier decorations -->
+                <circle cx="115" cy="195" r="6" fill="#ffb6c1" opacity="0.7" />
+                <circle cx="150" cy="195" r="6" fill="#ffb6c1" opacity="0.7" />
+                <circle cx="185" cy="195" r="6" fill="#ffb6c1" opacity="0.7" />
+                
+                <!-- Candles -->
+                <g class="candle">
+                    <rect x="135" y="130" width="8" height="40" rx="2" fill="#ffd700" />
+                    <rect x="135" y="130" width="8" height="5" rx="2" fill="#ffed4e" />
+                    <!-- Candle flame -->
+                    <g class="flame candle-glow">
+                        <ellipse cx="139" cy="118" rx="8" ry="12" fill="#ffd700" opacity="0.3" />
+                        <path d="M 139 128 Q 134 120, 139 110 Q 144 120, 139 128 Z" fill="#ff6b35" />
+                        <path d="M 139 124 Q 136 118, 139 112 Q 142 118, 139 124 Z" fill="#ffa500" />
+                        <path d="M 139 120 Q 137 116, 139 114 Q 141 116, 139 120 Z" fill="#ffed4e" />
+                    </g>
+                </g>
+                
+                <g class="candle">
+                    <rect x="157" y="130" width="8" height="40" rx="2" fill="#ffd700" />
+                    <rect x="157" y="130" width="8" height="5" rx="2" fill="#ffed4e" />
+                    <!-- Candle flame -->
+                    <g class="flame candle-glow">
+                        <ellipse cx="161" cy="118" rx="8" ry="12" fill="#ffd700" opacity="0.3" />
+                        <path d="M 161 128 Q 156 120, 161 110 Q 166 120, 161 128 Z" fill="#ff6b35" />
+                        <path d="M 161 124 Q 158 118, 161 112 Q 164 118, 161 124 Z" fill="#ffa500" />
+                        <path d="M 161 120 Q 159 116, 161 114 Q 163 116, 161 120 Z" fill="#ffed4e" />
+                    </g>
+                </g>
+                
+             </svg>
+        </div>
+        <div class="click-hint">คลิกที่เค้กเพื่อรับคำอวยพร</div>
+    </div>
+
+    <!-- Birthday Message -->
+    <div class="birthday-message" id="birthdayMessage">
+        <button class="close-button" id="closeButton">&times;</button>
+        <h1>สุขสันต์วันเกิดนะคะพี่</h1>
+        <p>ตั้งแต่ได้รู้จักพี่มา หนูเห็นเลยว่าพี่เป็นคนที่ตั้งใจและทุ่มเทกับทุกอย่างมาก ๆ ไม่ว่าจะเรื่องงานหรือเรื่องชีวิต พี่เป็นคนเก่ง คนอบอุ่น และเป็นคนที่ทำให้หนูรู้สึกสบายใจทุกครั้งที่ได้คุยด้วย หนูเลยอยากบอกว่าหนูภูมิใจในตัวพี่มากจริง ๆ และดีใจมากที่มีพี่อยู่ในชีวิตของหนู</p>
+        <p>หนูขอให้ปีนี้เป็นปีที่ใจดีกับพี่มาก ๆ ขอให้สิ่งที่พี่ตั้งใจ สิ่งที่พี่พยายาม ค่อย ๆ กลายเป็นความสำเร็จที่พี่ฝันไว้ ขอให้พี่ได้เติบโตในเส้นทางที่พี่รัก ได้เจอแต่โอกาสดี ๆ และมีแต่เรื่องราวที่ทำให้พี่มีความสุขในทุก ๆ วันนะคะ</p>
+        <p>แล้วหนูอยากให้พี่รู้ไว้อีกอย่างนะ…ไม่ว่าพี่จะเก่ง จะเข้มแข็ง หรือจะดูแลทุกอย่างได้ดีแค่ไหน พี่ก็ยังสามารถเหนื่อยได้ ท้อได้ และในวันที่พี่รู้สึกไม่ไหว หนูยังอยู่ตรงนี้เสมอ ยังอยากเป็นคนที่พี่สบายใจที่จะคุยด้วย เป็นกำลังใจเล็ก ๆ ที่คอยอยู่ข้างพี่แบบนี้ไปเรื่อย ๆ เลยนะ</p>
+        <p>วันเกิดปีนี้ หนูขอให้พี่ได้รับความรักเยอะ ๆ เท่ากับที่พี่มอบให้คนอื่น และถ้าถามว่าความรักจากหนูอยู่ตรงไหน…มันก็อยู่ตรงนี้ อยู่ข้าง ๆ พี่เสมอเลยนะคะ 🤍</p>
+        <p class="signature">หนูอยู่ตรงนี้เสมอเลยนะ</p>
+    </div>
+
+    <!-- Music Control Button -->
+    <button class="music-control hidden" id="musicControl">&#9835;</button>
+
+    <!-- Audio Element -->
+    <audio id="birthdayAudio" loop preload="auto">
+        <source src="https://media.vocaroo.com/mp3/19rr85eiBuX1" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // PIN Logic
+        const correctPIN = '1902';
+        const pinInputs = [
+            document.getElementById('pin1'),
+            document.getElementById('pin2'),
+            document.getElementById('pin3'),
+            document.getElementById('pin4')
+        ];
+        const errorMessage = document.getElementById('errorMessage');
+        const pinScreen = document.getElementById('pinScreen');
+        const birthdayCard = document.getElementById('birthdayCard');
+        const birthdayMessage = document.getElementById('birthdayMessage');
+        const cakeContainer = document.getElementById('cakeContainer');
+        const musicControl = document.getElementById('musicControl');
+        const birthdayAudio = document.getElementById('birthdayAudio');
+        const closeButton = document.getElementById('closeButton');
+
+        let isPlaying = false;
+
+        // Auto-focus and auto-advance PIN inputs
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    if (index < 3) {
+                        pinInputs[index + 1].focus();
+                    } else {
+                        checkPIN();
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    pinInputs[index - 1].focus();
+                }
+            });
+
+            // Prevent zoom on iOS when focusing input
+            input.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                input.focus();
+            });
+        });
+
+        pinInputs[0].focus();
+
+        function checkPIN() {
+            const enteredPIN = pinInputs.map(input => input.value).join('');
+            
+            if (enteredPIN === correctPIN) {
+                errorMessage.textContent = '';
+                pinScreen.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                pinScreen.style.opacity = '0';
+                pinScreen.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    pinScreen.classList.add('hidden');
+                    birthdayCard.classList.add('active');
+                    createConfetti();
+                }, 600);
+            } else {
+                errorMessage.textContent = 'รหัส PIN ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง';
+                pinInputs.forEach(input => {
+                    input.value = '';
+                    input.style.borderColor = '#d89b92';
+                    input.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        input.style.borderColor = '#e8d5d3';
+                        input.style.animation = '';
+                    }, 500);
+                });
+                pinInputs[0].focus();
+            }
+        }
+
+        // Cake click event
+        cakeContainer.addEventListener('click', () => {
+            birthdayCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            birthdayCard.style.opacity = '0';
+            birthdayCard.style.transform = 'scale(0.95) translateY(20px)';
+            setTimeout(() => {
+                birthdayCard.classList.remove('active');
+                birthdayMessage.classList.add('active');
+                musicControl.classList.remove('hidden');
+                playMusic();
+            }, 600);
+        });
+
+        // Music control
+        function playMusic() {
+            birthdayAudio.play()
+                .then(() => {
+                    isPlaying = true;
+                    musicControl.innerHTML = '&#9835;';
+                    console.log('Audio playing successfully');
+                })
+                .catch(e => {
+                    console.log('Audio play failed:', e);
+                    // Try to reload and play again
+                    birthdayAudio.load();
+                    setTimeout(() => {
+                        birthdayAudio.play()
+                            .then(() => {
+                                isPlaying = true;
+                                musicControl.innerHTML = '&#9835;';
+                            })
+                            .catch(err => console.log('Audio play retry failed:', err));
+                    }, 500);
+                });
+        }
+
+        // Close button
+        closeButton.addEventListener('click', () => {
+            birthdayMessage.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            birthdayMessage.style.opacity = '0';
+            birthdayMessage.style.transform = 'scale(0.95) translateY(20px)';
+            setTimeout(() => {
+                birthdayMessage.classList.remove('active');
+                birthdayMessage.style.opacity = '';
+                birthdayMessage.style.transform = '';
+                birthdayCard.classList.add('active');
+                birthdayCard.style.opacity = '';
+                birthdayCard.style.transform = '';
+            }, 600);
+        });
+
+        musicControl.addEventListener('click', () => {
+            if (isPlaying) {
+                birthdayAudio.pause();
+                musicControl.innerHTML = '&#9834;';
+                isPlaying = false;
+            } else {
+                birthdayAudio.play()
+                    .then(() => {
+                        musicControl.innerHTML = '&#9835;';
+                        isPlaying = true;
+                    })
+                    .catch(e => {
+                        console.log('Audio play error:', e);
+                        // Try loading again
+                        birthdayAudio.load();
+                        setTimeout(() => {
+                            birthdayAudio.play()
+                                .then(() => {
+                                    musicControl.innerHTML = '&#9835;';
+                                    isPlaying = true;
+                                })
+                                .catch(err => console.log('Audio retry failed:', err));
+                        }, 300);
+                    });
+            }
+        });
+
+        // Create confetti
+        function createConfetti() {
+            const colors = ['#ffc0cb', '#ffb6c1', '#ff69b4', '#ff1493', '#f5d5ce', '#ffd9d9', '#ffe8e8', '#fff0f0'];
+            const shapes = ['circle', 'square', 'triangle'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-20px';
+                    
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                    
+                    if (shape === 'circle') {
+                        confetti.style.borderRadius = '50%';
+                        confetti.style.background = color;
+                    } else if (shape === 'square') {
+                        confetti.style.background = color;
+                        confetti.style.transform = 'rotate(45deg)';
+                    } else {
+                        confetti.style.width = '0';
+                        confetti.style.height = '0';
+                        confetti.style.borderLeft = '5px solid transparent';
+                        confetti.style.borderRight = '5px solid transparent';
+                        confetti.style.borderBottom = '10px solid ' + color;
+                    }
+                    
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    confetti.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>

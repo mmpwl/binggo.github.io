@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu - Anniversary Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500&family=Sarabun:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Prompt', sans-serif;
+      overflow-x: hidden;
+      background: #fefefe;
+    }
+    
+    /* Menu Page */
+    .menu {
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #ffffff 0%, #fff8fa 100%);
+      padding: 4rem 2rem;
+      animation: fadeIn 0.8s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .menu-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .menu-header h2 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+    
+    .menu-header p {
+      font-size: 0.95rem;
+      color: #aaa;
+      font-weight: 200;
+      letter-spacing: 0.5px;
+    }
+    
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .menu-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid #f5f5f5;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ffccdd, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .menu-card:hover::before {
+      opacity: 1;
+    }
+    
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      border-color: #ffe6f0;
+    }
+    
+    .menu-card-icon {
+      width: 55px;
+      height: 55px;
+      margin-bottom: 0.8rem;
+      display: block;
+      object-fit: contain;
+      opacity: 0.9;
+      transition: transform 0.3s ease;
+    }
+    
+    .menu-card:hover .menu-card-icon {
+      transform: scale(1.08);
+    }
+    
+    .menu-card h3 {
+      font-size: 1.05rem;
+      color: #444;
+      margin-bottom: 0.4rem;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+    
+    .menu-card p {
+      font-size: 0.75rem;
+      color: #bbb;
+      font-weight: 200;
+      line-height: 1.4;
+    }
+    
+    /* 5th card spans 2 columns */
+    .menu-card:nth-child(5) {
+      grid-column: 1 / -1;
+      max-width: 240px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    /* Card Hover Effects */
+    .menu-card:nth-child(1):hover {
+      background: linear-gradient(135deg, #fff9fa 0%, #fff 100%);
+    }
+    
+    .menu-card:nth-child(2):hover {
+      background: linear-gradient(135deg, #fffdf9 0%, #fff 100%);
+    }
+    
+    .menu-card:nth-child(3):hover {
+      background: linear-gradient(135deg, #f9fbff 0%, #fff 100%);
+    }
+    
+    .menu-card:nth-child(4):hover {
+      background: linear-gradient(135deg, #faf9ff 0%, #fff 100%);
+    }
+    
+    .menu-card:nth-child(5):hover {
+      background: linear-gradient(135deg, #f9fffb 0%, #fff 100%);
+    }
+    
+    /* Back Button */
+    .back-btn {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+      background: #fff;
+      color: #999;
+      border: 1px solid #e5e5e5;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Prompt', sans-serif;
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .back-btn:hover {
+      background: #f5f5f5;
+      color: #666;
+      border-color: #ddd;
+      transform: translateX(-2px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .menu {
+        padding: 3rem 1.5rem;
+      }
+      
+      .menu-header h2 {
+        font-size: 1.6rem;
+      }
+      
+      .menu-grid {
+        max-width: 400px;
+        gap: 1rem;
+      }
+      
+      .menu-card {
+        padding: 1.2rem 0.8rem;
+      }
+      
+      .menu-card-icon {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .menu-card h3 {
+        font-size: 0.95rem;
+      }
+      
+      .menu-card p {
+        font-size: 0.7rem;
+      }
+      
+      .back-btn {
+        top: 1.5rem;
+        left: 1.5rem;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.85rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .menu-grid {
+        max-width: 340px;
+        gap: 0.8rem;
+      }
+      
+      .menu-card {
+        padding: 1rem 0.6rem;
+      }
+      
+      .menu-card-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 0.6rem;
+      }
+      
+      .menu-card h3 {
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+      }
+      
+      .menu-card p {
+        font-size: 0.68rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back Button -->
+  <a href="index.html" class="back-btn">← กลับ</a>
+
+  <!-- Menu Page -->
+  <div class="menu">
+    <div class="menu-header">
+      <h2>เลือกสิ่งที่คุณต้องการ</h2>
+      <p>แต่ละอย่างทำด้วยใจ เพื่อคุณคนพิเศษ</p>
+    </div>
+    
+    <div class="menu-grid">
+      <div class="menu-card" onclick="location.href='card.html'">
+        <img src="valentine.png" alt="Valentine" class="menu-card-icon" />
+        <h3>Valentine's Card</h3>
+        <p>การ์ดวาเลนไทน์</p>
+      </div>
+      
+      <div class="menu-card" onclick="location.href='bd.html'">
+        <img src="birthday.png" alt="Birthday" class="menu-card-icon" />
+        <h3>Birthday Card</h3>
+        <p>การ์ดวันเกิดพิเศษ</p>
+      </div>
+      
+      <div class="menu-card" onclick="location.href='card2.html'">
+        <img src="encouragement.png" alt="Encouragement" class="menu-card-icon" />
+        <h3>Encouragement Card</h3>
+        <p>การ์ดให้กำลังใจ</p>
+      </div>
+      
+      <div class="menu-card" onclick="location.href='game-menu.html'">
+        <img src="game.png" alt="Game" class="menu-card-icon" />
+        <h3>Game</h3>
+        <p>เกมสนุกๆ</p>
+      </div>
+      
+      <div class="menu-card" onclick="location.href='music.html'">
+        <img src="music.png" alt="Playlist" class="menu-card-icon" />
+        <h3>Playlist</h3>
+        <p>เพลงตามมู้ด</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
