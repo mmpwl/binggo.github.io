@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <title>เกมจิ๊กซอภาพคู่รัก 16 ชิ้น</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -11,9 +13,7 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
+      touch-action: manipulation;
     }
 
     body, html {
@@ -21,9 +21,9 @@
       font-family: 'Prompt', sans-serif;
       background: #fafafa;
       overflow-x: hidden;
-      touch-action: pan-y;
-      position: fixed;
-      width: 100%;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     /* Floating Hearts Background */
@@ -76,24 +76,22 @@
       background: linear-gradient(to bottom, #ffffff 0%, #fff5f8 100%);
       position: relative;
       z-index: 1;
-      padding: 20px;
     }
 
     .start-title {
-      font-size: clamp(2em, 8vw, 3em);
+      font-size: 3em;
       font-weight: 400;
       color: #2c2c2c;
       margin-bottom: 20px;
       letter-spacing: 2px;
       animation: fadeInDown 0.8s ease;
       position: relative;
-      text-align: center;
     }
 
     .start-title::after {
       content: '♥';
       position: absolute;
-      top: -30px;
+      top: -40px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.6em;
@@ -114,13 +112,12 @@
     }
 
     .subtitle {
-      font-size: clamp(0.85em, 3vw, 1em);
+      font-size: 1em;
       font-weight: 300;
       color: #999;
       margin-bottom: 50px;
       letter-spacing: 1px;
       animation: fadeInDown 0.8s ease 0.2s backwards;
-      text-align: center;
     }
 
     @keyframes fadeInDown {
@@ -135,7 +132,7 @@
     }
 
     #startScreen button {
-      font-size: clamp(1em, 4vw, 1.2em);
+      font-size: 1.2em;
       font-weight: 400;
       padding: 18px 60px;
       border-radius: 50px;
@@ -148,7 +145,6 @@
       animation: fadeInUp 0.8s ease 0.4s backwards;
       position: relative;
       overflow: hidden;
-      touch-action: manipulation;
     }
 
     #startScreen button::before {
@@ -200,15 +196,15 @@
     }
 
     .deco-circle-1 {
-      width: clamp(150px, 30vw, 300px);
-      height: clamp(150px, 30vw, 300px);
+      width: 300px;
+      height: 300px;
       top: 10%;
-      right: 5%;
+      right: 10%;
     }
 
     .deco-circle-2 {
-      width: clamp(100px, 20vw, 200px);
-      height: clamp(100px, 20vw, 200px);
+      width: 200px;
+      height: 200px;
       bottom: 15%;
       left: 5%;
       animation-direction: reverse;
@@ -220,25 +216,41 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      padding: clamp(15px, 3vw, 30px) 15px;
+      padding: 20px 15px;
       min-height: 100vh;
       background: linear-gradient(to bottom, #fafafa 0%, #fff5f8 100%);
       position: relative;
       z-index: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
     }
 
     h1 {
       color: #2c2c2c;
-      font-size: clamp(1.3em, 5vw, 2em);
+      font-size: 2em;
       font-weight: 400;
       margin-bottom: 10px;
       text-align: center;
       letter-spacing: 1px;
       animation: fadeIn 0.6s ease;
       position: relative;
-      padding: 0 15px;
+    }
+
+    h1::before,
+    h1::after {
+      content: '♡';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.6em;
+      color: #ff69b4;
+      opacity: 0.5;
+    }
+
+    h1::before {
+      left: -40px;
+    }
+
+    h1::after {
+      right: -40px;
     }
 
     @keyframes fadeIn {
@@ -249,27 +261,47 @@
     /* Image Selector */
     #imageSelector {
       display: flex;
-      gap: clamp(10px, 3vw, 20px);
-      margin-bottom: clamp(15px, 4vw, 30px);
+      gap: 15px;
+      margin-bottom: 30px;
       justify-content: center;
       flex-wrap: wrap;
       animation: fadeIn 0.8s ease 0.2s backwards;
-      padding: 0 10px;
-      width: 100%;
     }
 
     .thumbnail {
-      width: clamp(80px, 26vw, 120px);
-      height: clamp(80px, 26vw, 120px);
+      width: 110px;
+      height: 110px;
       object-fit: cover;
-      border: 3px solid transparent;
+      border: 2px solid transparent;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s ease;
       filter: grayscale(100%);
       opacity: 0.6;
       position: relative;
-      touch-action: manipulation;
+    }
+
+    .thumbnail::after {
+      content: '♥';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 2.5em;
+      color: #ff69b4;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnail:active::after {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.7;
+    }
+
+    .thumbnail:active {
+      filter: grayscale(0%);
+      opacity: 1;
+      transform: scale(0.95);
     }
 
     .thumbnail.selected {
@@ -277,86 +309,101 @@
       filter: grayscale(0%);
       opacity: 1;
       box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
-      transform: scale(1.05);
     }
 
     /* Game Container */
     #gameContainer {
-      display: none;
+      display: flex;
       flex-direction: column;
-      gap: clamp(15px, 4vw, 25px);
+      gap: 20px;
       align-items: center;
       animation: fadeIn 1s ease 0.4s backwards;
       width: 100%;
-      margin-bottom: 20px;
     }
 
     .columnLayout {
       display: flex;
       flex-direction: column;
-      gap: clamp(15px, 4vw, 25px);
+      gap: 20px;
       align-items: center;
       width: 100%;
-      max-width: 100%;
     }
 
     #puzzleBoard, #pieceContainer {
-      width: min(340px, calc(100vw - 40px));
-      height: min(340px, calc(100vw - 40px));
+      width: min(90vw, 340px);
+      height: min(90vw, 340px);
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(4, 1fr);
       gap: 2px;
       background: #ffffff;
-      border: 2px solid #ffe0ec;
-      border-radius: 8px;
+      border: 1px solid #ffe0ec;
+      border-radius: 4px;
       padding: 8px;
       transition: all 0.3s ease;
     }
 
     #puzzleBoard {
-      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.15);
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.1);
     }
 
     #pieceContainer {
       background: #fff9fb;
-      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.1);
+      box-shadow: 0 2px 12px rgba(255, 105, 180, 0.08);
     }
 
     .piece {
       width: 100%;
       height: 100%;
-      background-size: calc(400% + 6px) calc(400% + 6px);
+      background-size: calc(100% * 4 - 8px) calc(100% * 4 - 8px);
       background-repeat: no-repeat;
-      cursor: grab;
-      border-radius: 4px;
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s ease;
       position: relative;
       touch-action: none;
-      border: 1px solid rgba(255, 105, 180, 0.1);
     }
 
     .piece.dragging {
       opacity: 0.7;
       transform: scale(1.1);
       z-index: 1000;
-      cursor: grabbing;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+    }
+
+    .piece:active {
+      transform: scale(1.05);
     }
 
     .dropzone {
       background: #fff9fb;
-      border: 2px dashed #ffe0ec;
-      border-radius: 4px;
+      border: 1px dashed #ffe0ec;
+      border-radius: 2px;
       transition: all 0.2s ease;
       position: relative;
-      min-height: 100%;
     }
 
     .dropzone.drag-over {
       background: #fff;
       border-color: #ff69b4;
-      box-shadow: inset 0 0 15px rgba(255, 105, 180, 0.2);
+      transform: scale(1.02);
+    }
+
+    .dropzone::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle, rgba(255, 105, 180, 0.3), transparent);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .dropzone.drag-over::after {
+      transform: translate(-50%, -50%) scale(2);
     }
 
     /* Popup */
@@ -367,18 +414,18 @@
       left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
       background: #ffffff;
-      border: 2px solid #ffe0ec;
-      padding: clamp(30px, 8vw, 50px) clamp(40px, 10vw, 70px);
+      border: 1px solid #ffe0ec;
+      padding: 40px 50px;
       text-align: center;
-      font-size: clamp(1.2em, 4vw, 1.6em);
+      font-size: 1.4em;
       font-weight: 400;
       color: #2c2c2c;
       z-index: 1000;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(255, 105, 180, 0.2);
       animation: popupShow 0.4s ease forwards;
       letter-spacing: 1px;
-      max-width: 85vw;
+      max-width: 90%;
     }
 
     @keyframes popupShow {
@@ -389,9 +436,9 @@
 
     #popup::before {
       content: '♥';
-      font-size: clamp(2em, 8vw, 3em);
+      font-size: 2.5em;
       display: block;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       color: #ff69b4;
       font-weight: 300;
       animation: heartbeat 1s ease-in-out infinite;
@@ -414,20 +461,19 @@
 
     button {
       margin-top: 20px;
-      padding: clamp(12px, 3vw, 14px) clamp(25px, 7vw, 35px);
+      padding: 14px 40px;
       background: #ffffff;
       color: #2c2c2c;
       border: 2px solid #2c2c2c;
       border-radius: 50px;
       cursor: pointer;
-      font-size: clamp(0.9em, 3vw, 1em);
+      font-size: 1em;
       font-weight: 400;
       transition: all 0.3s ease;
       font-family: 'Prompt', sans-serif;
       letter-spacing: 1px;
       position: relative;
       overflow: hidden;
-      touch-action: manipulation;
     }
 
     button::before {
@@ -451,7 +497,7 @@
     button:active {
       background: #2c2c2c;
       color: #ffffff;
-      transform: scale(0.95);
+      transform: scale(0.98);
     }
 
     /* Overlay */
@@ -469,16 +515,16 @@
     /* Progress Indicator */
     .progress-container {
       width: 100%;
-      max-width: min(340px, calc(100vw - 40px));
-      margin-bottom: clamp(15px, 4vw, 25px);
+      max-width: min(90vw, 680px);
+      margin-bottom: 20px;
       animation: fadeIn 1s ease 0.6s backwards;
       padding: 0 10px;
     }
 
     .progress-bar {
-      height: 6px;
+      height: 4px;
       background: #ffe0ec;
-      border-radius: 3px;
+      border-radius: 2px;
       overflow: hidden;
       position: relative;
     }
@@ -486,7 +532,7 @@
     .progress-fill {
       height: 100%;
       background: linear-gradient(90deg, #ff69b4, #ff85c0);
-      border-radius: 3px;
+      border-radius: 2px;
       transition: width 0.5s ease;
       position: relative;
       overflow: hidden;
@@ -522,7 +568,7 @@
       color: #666;
       font-weight: 400;
       margin-top: 10px;
-      font-size: clamp(0.75em, 2.5vw, 0.9em);
+      font-size: 0.85em;
       letter-spacing: 0.5px;
     }
 
@@ -531,32 +577,30 @@
       width: 100%;
       display: flex;
       justify-content: center;
-      gap: clamp(10px, 3vw, 15px);
-      margin-top: clamp(15px, 4vw, 30px);
+      gap: 10px;
+      margin-top: 20px;
       flex-wrap: wrap;
-      padding: 0 15px 20px;
+      padding: 0 15px;
     }
 
     .game-button {
       background: #ffffff;
       border: 2px solid #ffe0ec;
-      padding: clamp(10px, 2.5vw, 12px) clamp(20px, 5vw, 30px);
-      font-size: clamp(0.85em, 2.5vw, 1em);
+      padding: 12px 30px;
+      font-size: 0.95em;
       display: flex;
       align-items: center;
       gap: 8px;
       color: #666;
       transition: all 0.3s ease;
       letter-spacing: 0.5px;
-      justify-content: center;
-      min-width: clamp(110px, 32vw, 140px);
     }
 
     .game-button:active {
       background: #fff9fb;
       border-color: #ff69b4;
       color: #2c2c2c;
-      transform: scale(0.95);
+      transform: scale(0.98);
     }
 
     /* Correct Piece Style */
@@ -564,8 +608,7 @@
       box-shadow: 0 0 15px rgba(255, 105, 180, 0.4) !important;
       opacity: 1;
       animation: correctPulse 0.6s ease;
-      cursor: default !important;
-      border-color: #ff69b4;
+      pointer-events: none;
     }
 
     @keyframes correctPulse {
@@ -577,79 +620,115 @@
       }
     }
 
-    /* Sparkle effect */
+    /* Sparkle effect on correct placement */
     @keyframes sparkle {
-      0% {
+      0%, 100% {
         opacity: 0;
-        transform: translate(0, 0) scale(0) rotate(0deg);
+        transform: scale(0) rotate(0deg);
       }
       50% {
         opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: translate(var(--tx), var(--ty)) scale(1) rotate(180deg);
+        transform: scale(1) rotate(180deg);
       }
     }
 
     .sparkle {
-      position: fixed;
+      position: absolute;
       width: 10px;
       height: 10px;
       background: #ff69b4;
       clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
       pointer-events: none;
       animation: sparkle 1s ease-out forwards;
-      z-index: 9999;
     }
 
-    /* Mobile-specific styles */
+    /* Mobile Specific Adjustments */
     @media (max-width: 768px) {
-      body {
-        overflow: hidden;
+      .start-title {
+        font-size: 2em;
       }
 
-      .heart-bg {
-        font-size: 12px;
+      .subtitle {
+        font-size: 0.85em;
+        padding: 0 20px;
+        text-align: center;
       }
 
-      #puzzleBoard, #pieceContainer {
-        gap: 3px;
-        padding: 6px;
+      h1 {
+        font-size: 1.5em;
       }
 
-      .piece {
-        border-width: 1px;
+      h1::before,
+      h1::after {
+        display: none;
       }
 
-      .start-title::after {
-        top: -25px;
+      .thumbnail {
+        width: 90px;
+        height: 90px;
+      }
+
+      #popup {
+        padding: 30px 40px;
+        font-size: 1.2em;
+      }
+
+      .button-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .game-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .deco-circle-1,
+      .deco-circle-2 {
+        display: none;
+      }
+
+      #gameWrapper {
+        padding: 15px 10px;
+      }
+
+      .columnLayout {
+        gap: 15px;
       }
     }
 
-    /* Extra small screens */
-    @media (max-width: 400px) {
-      .start-title::after {
-        top: -20px;
-        font-size: 0.5em;
+    @media (max-width: 480px) {
+      .start-title {
+        font-size: 1.6em;
       }
 
       #startScreen button {
-        padding: 15px 40px;
+        padding: 15px 45px;
+        font-size: 1em;
+      }
+
+      h1 {
+        font-size: 1.3em;
+      }
+
+      .thumbnail {
+        width: 80px;
+        height: 80px;
       }
 
       #popup {
         padding: 25px 30px;
+        font-size: 1.1em;
       }
 
-      #puzzleBoard, #pieceContainer {
-        width: min(300px, calc(100vw - 30px));
-        height: min(300px, calc(100vw - 30px));
+      button {
+        padding: 12px 30px;
+        font-size: 0.95em;
       }
     }
 
-    /* Landscape mobile */
-    @media (max-width: 900px) and (orientation: landscape) {
+    /* Landscape mode on mobile */
+    @media (max-height: 600px) and (orientation: landscape) {
       #gameWrapper {
         padding: 10px;
       }
@@ -660,22 +739,27 @@
       }
 
       #imageSelector {
+        margin-bottom: 15px;
+        gap: 10px;
+      }
+
+      .thumbnail {
+        width: 70px;
+        height: 70px;
+      }
+
+      .progress-container {
         margin-bottom: 10px;
       }
 
       .columnLayout {
         flex-direction: row;
         gap: 15px;
-        flex-wrap: nowrap;
       }
 
       #puzzleBoard, #pieceContainer {
-        width: min(250px, calc(48vw - 15px));
-        height: min(250px, calc(48vw - 15px));
-      }
-
-      .progress-container {
-        margin-bottom: 10px;
+        width: min(45vw, 280px);
+        height: min(45vw, 280px);
       }
 
       .button-container {
@@ -756,316 +840,69 @@
     const overlay = document.getElementById('overlay');
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
-    const puzzleBoard = document.getElementById('puzzleBoard');
-    const pieceContainer = document.getElementById('pieceContainer');
-    const popup = document.getElementById('popup');
-
-    const rows = 4;
-    const cols = 4;
-    const totalPieces = rows * cols;
-
-    let currentImage = null;
-    let correct = 0;
-    const completedPuzzles = {};
-    const imageList = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
-
-    // Touch/drag state
-    let draggedPiece = null;
-    let touchOffsetX = 0;
-    let touchOffsetY = 0;
-    let clonedPiece = null;
 
     startBtn.addEventListener('click', () => {
       startScreen.style.display = 'none';
       gameWrapper.style.display = 'flex';
-      bgm.src = "https://media.vocaroo.com/mp3/1b0a8d0p6mNx";
-      bgm.play().catch(e => console.log('Auto-play prevented'));
+      bgm.src = "https://media.vocaroo.com/mp3/1mDg7B7XQf5Y";
+      bgm.play().catch(e => console.log('Audio play failed:', e));
     });
 
     const backBtn = document.getElementById('backBtn');
     backBtn.addEventListener('click', () => {
-      if (confirm('ต้องการย้อนกลับหรือไม่?')) {
-        window.location.href = "game-menu.html";
-      }
+      window.location.href = "game-menu.html";
     });
 
     const restartBtn = document.getElementById('restartBtn');
     restartBtn.addEventListener('click', () => {
       if (confirm('ต้องการเริ่มเกมใหม่ทั้งหมด?\nความคืบหน้าจะถูกรีเซ็ต')) {
-        resetAllProgress();
-      }
-    });
-
-    // Image selection
-    document.querySelectorAll('.thumbnail').forEach(thumb => {
-      thumb.addEventListener('click', function() {
-        const imagePath = this.dataset.image;
-        startGame(this, imagePath);
-      });
-    });
-
-    function startGame(el, imagePath) {
-      document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
-      el.classList.add('selected');
-
-      currentImage = imagePath;
-      document.getElementById('gameContainer').style.display = 'flex';
-
-      puzzleBoard.innerHTML = '';
-      pieceContainer.innerHTML = '';
-      correct = 0;
-
-      // Create dropzones
-      for (let i = 0; i < totalPieces; i++) {
-        const dropzone = document.createElement('div');
-        dropzone.classList.add('dropzone');
-        dropzone.dataset.index = i;
-        puzzleBoard.appendChild(dropzone);
-      }
-
-      let completedPieces = completedPuzzles[imagePath] || Array(totalPieces).fill(false);
-      correct = completedPieces.filter(x => x).length;
-
-      // Add completed pieces to board
-      completedPieces.forEach((done, index) => {
-        if (done) {
-          const piece = createPiece(imagePath, index);
-          piece.classList.add('correct');
-          puzzleBoard.children[index].appendChild(piece);
+        for (const key in completedPuzzles) {
+          delete completedPuzzles[key];
         }
-      });
-
-      // Create remaining pieces
-      const remainingPieces = [];
-      for (let i = 0; i < totalPieces; i++) {
-        if (!completedPieces[i]) remainingPieces.push(i);
-      }
-
-      // Shuffle remaining pieces
-      remainingPieces.sort(() => Math.random() - 0.5);
-
-      remainingPieces.forEach(i => {
-        const piece = createPiece(imagePath, i);
-        piece.dataset.index = i;
-        setupPieceDragHandlers(piece);
-        pieceContainer.appendChild(piece);
-      });
-
-      updateProgress();
-
-      if (allPuzzlesCompleted()) {
-        setTimeout(showCompletionPopup, 300);
-      } else {
         overlay.style.display = 'none';
         popup.style.display = 'none';
+        document.getElementById('gameContainer').style.display = 'none';
+        document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
+        currentImage = null;
+        progressFill.style.width = '0%';
+        progressText.textContent = 'เลือกภาพเพื่อเริ่มเล่น';
       }
-    }
+    });
 
-    function createPiece(imagePath, index) {
-      const piece = document.createElement('div');
-      piece.classList.add('piece');
-      piece.style.backgroundImage = `url('${imagePath}')`;
-      
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      
-      // Calculate background position
-      const xPos = -(col * 100);
-      const yPos = -(row * 100);
-      
-      piece.style.backgroundPosition = `${xPos}% ${yPos}%`;
-      piece.dataset.index = index;
-      
-      return piece;
-    }
+    const rows = 4;
+    const cols = 4;
+    const totalPieces = rows * cols;
 
-    function setupPieceDragHandlers(piece) {
-      // Touch events
-      piece.addEventListener('touchstart', handleTouchStart, { passive: false });
-      piece.addEventListener('touchmove', handleTouchMove, { passive: false });
-      piece.addEventListener('touchend', handleTouchEnd, { passive: false });
+    const puzzleBoard = document.getElementById('puzzleBoard');
+    const pieceContainer = document.getElementById('pieceContainer');
+    const popup = document.getElementById('popup');
 
-      // Mouse events for desktop
-      piece.addEventListener('mousedown', handleMouseDown);
-    }
+    let correct = 0;
+    const completedPuzzles = {};
+    const imageList = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
+    let currentImage = null;
 
-    function handleTouchStart(e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const piece = e.currentTarget;
-      
-      draggedPiece = piece;
-      const rect = piece.getBoundingClientRect();
-      touchOffsetX = touch.clientX - rect.left;
-      touchOffsetY = touch.clientY - rect.top;
+    // Touch/Drag support variables
+    let draggedPiece = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let pieceStartX = 0;
+    let pieceStartY = 0;
 
-      // Create clone for dragging
-      clonedPiece = piece.cloneNode(true);
-      clonedPiece.style.position = 'fixed';
-      clonedPiece.style.width = rect.width + 'px';
-      clonedPiece.style.height = rect.height + 'px';
-      clonedPiece.style.left = rect.left + 'px';
-      clonedPiece.style.top = rect.top + 'px';
-      clonedPiece.style.zIndex = '9999';
-      clonedPiece.style.pointerEvents = 'none';
-      clonedPiece.classList.add('dragging');
-      document.body.appendChild(clonedPiece);
-
-      piece.style.opacity = '0.3';
-    }
-
-    function handleTouchMove(e) {
-      e.preventDefault();
-      if (!clonedPiece) return;
-
-      const touch = e.touches[0];
-      clonedPiece.style.left = (touch.clientX - touchOffsetX) + 'px';
-      clonedPiece.style.top = (touch.clientY - touchOffsetY) + 'px';
-
-      // Highlight dropzones
-      updateDropzoneHighlight(touch.clientX, touch.clientY);
-    }
-
-    function handleTouchEnd(e) {
-      e.preventDefault();
-      if (!draggedPiece || !clonedPiece) return;
-
-      const touch = e.changedTouches[0];
-      const dropzone = findDropzoneAtPoint(touch.clientX, touch.clientY);
-
-      // Clean up
-      document.body.removeChild(clonedPiece);
-      draggedPiece.style.opacity = '';
-      
-      document.querySelectorAll('.dropzone').forEach(dz => dz.classList.remove('drag-over'));
-
-      if (dropzone && !dropzone.hasChildNodes()) {
-        attemptPlacement(draggedPiece, dropzone);
-      }
-
-      clonedPiece = null;
-      draggedPiece = null;
-    }
-
-    function handleMouseDown(e) {
-      const piece = e.currentTarget;
-      draggedPiece = piece;
-
-      const handleMouseMove = (e) => {
-        if (!clonedPiece && draggedPiece) {
-          const rect = piece.getBoundingClientRect();
-          touchOffsetX = e.clientX - rect.left;
-          touchOffsetY = e.clientY - rect.top;
-
-          clonedPiece = piece.cloneNode(true);
-          clonedPiece.style.position = 'fixed';
-          clonedPiece.style.width = rect.width + 'px';
-          clonedPiece.style.height = rect.height + 'px';
-          clonedPiece.style.zIndex = '9999';
-          clonedPiece.style.pointerEvents = 'none';
-          clonedPiece.classList.add('dragging');
-          document.body.appendChild(clonedPiece);
-          piece.style.opacity = '0.3';
-        }
-
-        if (clonedPiece) {
-          clonedPiece.style.left = (e.clientX - touchOffsetX) + 'px';
-          clonedPiece.style.top = (e.clientY - touchOffsetY) + 'px';
-          updateDropzoneHighlight(e.clientX, e.clientY);
-        }
-      };
-
-      const handleMouseUp = (e) => {
-        if (clonedPiece) {
-          const dropzone = findDropzoneAtPoint(e.clientX, e.clientY);
-          document.body.removeChild(clonedPiece);
-          draggedPiece.style.opacity = '';
-          
-          document.querySelectorAll('.dropzone').forEach(dz => dz.classList.remove('drag-over'));
-
-          if (dropzone && !dropzone.hasChildNodes()) {
-            attemptPlacement(draggedPiece, dropzone);
-          }
-
-          clonedPiece = null;
-        }
-
-        draggedPiece = null;
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
-
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    function updateDropzoneHighlight(x, y) {
-      document.querySelectorAll('.dropzone').forEach(dz => {
-        const rect = dz.getBoundingClientRect();
-        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-          dz.classList.add('drag-over');
-        } else {
-          dz.classList.remove('drag-over');
-        }
-      });
-    }
-
-    function findDropzoneAtPoint(x, y) {
-      const dropzones = document.querySelectorAll('.dropzone');
-      for (let dz of dropzones) {
-        const rect = dz.getBoundingClientRect();
-        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-          return dz;
-        }
-      }
-      return null;
-    }
-
-    function attemptPlacement(piece, dropzone) {
-      const correctIndex = piece.dataset.index;
-      const dropIndex = dropzone.dataset.index;
-
-      dropzone.appendChild(piece);
-
-      if (correctIndex === dropIndex) {
-        // Correct placement
-        correct++;
-        piece.classList.add('correct');
-        piece.style.pointerEvents = 'none';
-        
-        createSparkles(piece);
-
-        if (!completedPuzzles[currentImage]) {
-          completedPuzzles[currentImage] = Array(totalPieces).fill(false);
-        }
-        completedPuzzles[currentImage][correctIndex] = true;
-
-        updateProgress();
-
-        if (allPuzzlesCompleted()) {
-          setTimeout(showCompletionPopup, 500);
-        }
-      } else {
-        // Wrong placement - return to piece container
-        setTimeout(() => {
-          pieceContainer.appendChild(piece);
-        }, 300);
-      }
-    }
-
+    // Create sparkle effect
     function createSparkles(element) {
       const rect = element.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 6; i++) {
         const sparkle = document.createElement('div');
         sparkle.classList.add('sparkle');
         sparkle.style.left = centerX + 'px';
         sparkle.style.top = centerY + 'px';
         
-        const angle = (Math.PI * 2 * i) / 8;
-        const distance = 40 + Math.random() * 30;
+        const angle = (Math.PI * 2 * i) / 6;
+        const distance = 30 + Math.random() * 20;
         const tx = Math.cos(angle) * distance;
         const ty = Math.sin(angle) * distance;
         
@@ -1097,6 +934,259 @@
       progressText.textContent = `${completedImages}/${imageList.length} ภาพ | ${totalCompleted}/${totalPuzzlePieces} ชิ้น (${Math.round(percentage)}%)`;
     }
 
+    // Image selector with touch support
+    document.querySelectorAll('.thumbnail').forEach(img => {
+      img.addEventListener('click', function() {
+        startGame(this, this.dataset.image);
+      });
+    });
+
+    function startGame(el, imagePath) {
+      document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
+      el.classList.add('selected');
+
+      currentImage = imagePath;
+      document.getElementById('gameContainer').style.display = 'flex';
+
+      puzzleBoard.innerHTML = '';
+      pieceContainer.innerHTML = '';
+      correct = 0;
+
+      // Create dropzones
+      for (let i = 0; i < totalPieces; i++) {
+        const dropzone = document.createElement('div');
+        dropzone.classList.add('dropzone');
+        dropzone.dataset.index = i;
+        puzzleBoard.appendChild(dropzone);
+      }
+
+      let completedPieces = completedPuzzles[imagePath] || Array(totalPieces).fill(false);
+      correct = completedPieces.filter(x => x).length;
+
+      // Place completed pieces
+      completedPieces.forEach((done, index) => {
+        if (done) {
+          const piece = createPiece(imagePath, index);
+          piece.classList.add('correct');
+          puzzleBoard.children[index].appendChild(piece);
+        }
+      });
+
+      // Create remaining pieces
+      const remainingPieces = [];
+      for (let i = 0; i < totalPieces; i++) {
+        if (!completedPieces[i]) remainingPieces.push(i);
+      }
+
+      remainingPieces.sort(() => Math.random() - 0.5);
+
+      remainingPieces.forEach(i => {
+        const piece = createPiece(imagePath, i);
+        piece.dataset.index = i;
+        
+        // Add touch and mouse event listeners
+        addDragListeners(piece);
+        
+        pieceContainer.appendChild(piece);
+      });
+
+      updateProgress();
+
+      if (allPuzzlesCompleted()) {
+        setTimeout(() => {
+          overlay.style.display = 'block';
+          popup.style.display = 'block';
+        }, 300);
+      } else {
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+      }
+    }
+
+    function createPiece(imagePath, index) {
+      const piece = document.createElement('div');
+      piece.classList.add('piece');
+      piece.style.backgroundImage = `url('${imagePath}')`;
+      
+      // Calculate background position based on grid position
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+      const percentX = (col * 100) / (cols - 1);
+      const percentY = (row * 100) / (rows - 1);
+      piece.style.backgroundPosition = `${percentX}% ${percentY}%`;
+      
+      piece.dataset.index = index;
+      return piece;
+    }
+
+    function addDragListeners(piece) {
+      // Mouse events
+      piece.draggable = true;
+      piece.addEventListener('dragstart', handleDragStart);
+      piece.addEventListener('dragend', handleDragEnd);
+
+      // Touch events
+      piece.addEventListener('touchstart', handleTouchStart, { passive: false });
+      piece.addEventListener('touchmove', handleTouchMove, { passive: false });
+      piece.addEventListener('touchend', handleTouchEnd, { passive: false });
+    }
+
+    // Mouse drag handlers
+    function handleDragStart(e) {
+      draggedPiece = e.target;
+      e.target.classList.add('dragging');
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      draggedPiece = null;
+    }
+
+    // Touch handlers
+    function handleTouchStart(e) {
+      e.preventDefault();
+      draggedPiece = e.target;
+      draggedPiece.classList.add('dragging');
+      
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      
+      const rect = draggedPiece.getBoundingClientRect();
+      pieceStartX = rect.left;
+      pieceStartY = rect.top;
+      
+      // Make piece position fixed for dragging
+      draggedPiece.style.position = 'fixed';
+      draggedPiece.style.left = pieceStartX + 'px';
+      draggedPiece.style.top = pieceStartY + 'px';
+      draggedPiece.style.width = rect.width + 'px';
+      draggedPiece.style.height = rect.height + 'px';
+      draggedPiece.style.zIndex = '1000';
+    }
+
+    function handleTouchMove(e) {
+      if (!draggedPiece) return;
+      e.preventDefault();
+      
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      
+      draggedPiece.style.left = (pieceStartX + deltaX) + 'px';
+      draggedPiece.style.top = (pieceStartY + deltaY) + 'px';
+      
+      // Check if over a dropzone
+      const dropzones = document.querySelectorAll('.dropzone');
+      let overDropzone = null;
+      
+      dropzones.forEach(zone => {
+        const rect = zone.getBoundingClientRect();
+        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+          overDropzone = zone;
+        }
+      });
+      
+      // Update dropzone styling
+      dropzones.forEach(zone => zone.classList.remove('drag-over'));
+      if (overDropzone) {
+        overDropzone.classList.add('drag-over');
+      }
+    }
+
+    function handleTouchEnd(e) {
+      if (!draggedPiece) return;
+      e.preventDefault();
+      
+      const touch = e.changedTouches[0];
+      
+      // Find the dropzone under the touch point
+      const dropzones = document.querySelectorAll('.dropzone');
+      let targetDropzone = null;
+      
+      dropzones.forEach(zone => {
+        const rect = zone.getBoundingClientRect();
+        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+          targetDropzone = zone;
+        }
+      });
+      
+      // Reset piece styling
+      draggedPiece.style.position = '';
+      draggedPiece.style.left = '';
+      draggedPiece.style.top = '';
+      draggedPiece.style.width = '';
+      draggedPiece.style.height = '';
+      draggedPiece.style.zIndex = '';
+      draggedPiece.classList.remove('dragging');
+      
+      // Clear drag-over styling
+      dropzones.forEach(zone => zone.classList.remove('drag-over'));
+      
+      // Handle drop
+      if (targetDropzone && !targetDropzone.hasChildNodes()) {
+        handleDrop(targetDropzone, draggedPiece);
+      }
+      
+      draggedPiece = null;
+    }
+
+    // Drag over and drop for mouse
+    document.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const dropzone = e.target.closest('.dropzone');
+      if (dropzone) {
+        document.querySelectorAll('.dropzone').forEach(z => z.classList.remove('drag-over'));
+        dropzone.classList.add('drag-over');
+      }
+    });
+
+    document.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const dropzone = e.target.closest('.dropzone');
+      document.querySelectorAll('.dropzone').forEach(z => z.classList.remove('drag-over'));
+      
+      if (dropzone && draggedPiece && !dropzone.hasChildNodes()) {
+        handleDrop(dropzone, draggedPiece);
+      }
+    });
+
+    function handleDrop(dropzone, piece) {
+      const correctIndex = piece.dataset.index;
+      const dropIndex = dropzone.dataset.index;
+
+      if (correctIndex === dropIndex) {
+        dropzone.appendChild(piece);
+        correct++;
+        piece.classList.add('correct');
+        
+        // Remove drag functionality from correct pieces
+        piece.draggable = false;
+        piece.style.cursor = 'default';
+        piece.removeEventListener('touchstart', handleTouchStart);
+        piece.removeEventListener('touchmove', handleTouchMove);
+        piece.removeEventListener('touchend', handleTouchEnd);
+        
+        createSparkles(piece);
+
+        if (!completedPuzzles[currentImage]) {
+          completedPuzzles[currentImage] = Array(totalPieces).fill(false);
+        }
+        completedPuzzles[currentImage][correctIndex] = true;
+
+        updateProgress();
+
+        if (allPuzzlesCompleted()) {
+          setTimeout(() => {
+            overlay.style.display = 'block';
+            popup.style.display = 'block';
+          }, 300);
+        }
+      }
+    }
+
     function allPuzzlesCompleted() {
       return imageList.every(img => {
         if (!completedPuzzles[img]) return false;
@@ -1104,30 +1194,15 @@
       });
     }
 
-    function showCompletionPopup() {
-      overlay.style.display = 'block';
-      popup.style.display = 'block';
-    }
-
-    function resetAllProgress() {
+    function resetGame() {
       for (const key in completedPuzzles) {
         delete completedPuzzles[key];
       }
       overlay.style.display = 'none';
       popup.style.display = 'none';
-      document.getElementById('gameContainer').style.display = 'none';
-      document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('selected'));
-      currentImage = null;
-      progressFill.style.width = '0%';
-      progressText.textContent = 'เลือกภาพเพื่อเริ่มเล่น';
-    }
-
-    function resetGame() {
-      resetAllProgress();
       bgm.pause();
       bgm.currentTime = 0;
-      startScreen.style.display = 'flex';
-      gameWrapper.style.display = 'none';
+      location.reload();
     }
   </script>
 </body>
