@@ -21,8 +21,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
+            padding: 20px 10px;
         }
 
         /* Back Button */
@@ -272,14 +273,18 @@
             display: none;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(15px);
-            padding: 50px 45px;
+            padding: 45px 40px;
             border-radius: 20px;
             box-shadow: 0 25px 70px rgba(210, 180, 170, 0.25);
-            max-width: 500px;
-            margin: 0 20px;
+            max-width: 550px;
+            width: 90%;
+            margin: 0 auto;
             position: relative;
             animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255, 255, 255, 0.8);
+            max-height: 85vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .birthday-message::before {
@@ -293,6 +298,7 @@
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             opacity: 0.5;
+            pointer-events: none;
         }
 
         .birthday-message.active {
@@ -316,7 +322,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 2.2em;
+            font-size: 2em;
             font-weight: 400;
             margin-bottom: 25px;
             letter-spacing: 0.5px;
@@ -324,28 +330,28 @@
 
         .birthday-message p {
             color: #7a6866;
-            font-size: 1.05em;
-            line-height: 2;
-            margin-bottom: 12px;
+            font-size: 1em;
+            line-height: 1.9;
+            margin-bottom: 15px;
             font-weight: 300;
             letter-spacing: 0.3px;
         }
 
         .birthday-message .signature {
-            margin-top: 30px;
+            margin-top: 25px;
             background: linear-gradient(135deg, #d2b4aa, #c19a8e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 1.1em;
+            font-size: 1.05em;
             font-weight: 400;
             letter-spacing: 0.3px;
         }
 
         .close-button {
             position: absolute;
-            top: 18px;
-            right: 18px;
+            top: 15px;
+            right: 15px;
             background: linear-gradient(135deg, #f9f5f3, #ffffff);
             border: 1px solid rgba(210, 180, 170, 0.2);
             font-size: 28px;
@@ -424,16 +430,42 @@
             display: none !important;
         }
 
-        /* Tablet and Mobile Landscape */
+        /* Custom scrollbar for birthday message */
+        .birthday-message::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .birthday-message::-webkit-scrollbar-track {
+            background: rgba(210, 180, 170, 0.1);
+            border-radius: 10px;
+        }
+
+        .birthday-message::-webkit-scrollbar-thumb {
+            background: rgba(210, 180, 170, 0.4);
+            border-radius: 10px;
+        }
+
+        .birthday-message::-webkit-scrollbar-thumb:hover {
+            background: rgba(210, 180, 170, 0.6);
+        }
+
+        /* Tablet */
         @media (max-width: 768px) {
+            body {
+                padding: 15px 10px;
+            }
+
             .pin-screen {
                 padding: 40px 30px;
-                width: 85%;
+                width: 92%;
+                max-width: 380px;
             }
 
             .birthday-message {
-                padding: 40px 30px;
-                width: 85%;
+                padding: 35px 28px;
+                width: 92%;
+                max-width: 480px;
+                max-height: 80vh;
             }
 
             .pin-screen h1 {
@@ -447,13 +479,14 @@
             }
 
             .birthday-message h1 {
-                font-size: 1.9em;
-                margin-bottom: 20px;
+                font-size: 1.8em;
+                margin-bottom: 22px;
             }
 
             .birthday-message p {
-                font-size: 1em;
+                font-size: 0.98em;
                 line-height: 1.85;
+                margin-bottom: 14px;
             }
 
             .cake-svg {
@@ -468,8 +501,8 @@
             .back-button {
                 padding: 10px 18px;
                 font-size: 14px;
-                top: 18px;
-                left: 18px;
+                top: 15px;
+                left: 15px;
             }
 
             .music-control {
@@ -484,24 +517,25 @@
         /* Mobile Portrait */
         @media (max-width: 480px) {
             body {
-                padding: 10px;
+                padding: 10px 8px;
             }
 
             .pin-screen {
-                padding: 35px 25px;
-                width: 90%;
+                padding: 32px 22px;
+                width: 94%;
                 max-width: none;
             }
 
             .birthday-message {
-                padding: 35px 25px;
-                width: 90%;
+                padding: 28px 20px 32px;
+                width: 94%;
                 max-width: none;
-                margin: 0 15px;
+                max-height: 75vh;
+                border-radius: 18px;
             }
 
             .pin-screen h1 {
-                font-size: 1.4em;
+                font-size: 1.45em;
                 margin-bottom: 10px;
             }
 
@@ -515,9 +549,9 @@
             }
 
             .pin-digit {
-                width: 48px;
-                height: 48px;
-                font-size: 22px;
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
             }
 
             .error-message {
@@ -525,27 +559,28 @@
             }
 
             .birthday-message h1 {
-                font-size: 1.6em;
+                font-size: 1.55em;
                 margin-bottom: 18px;
+                padding-right: 25px;
             }
 
             .birthday-message p {
-                font-size: 0.95em;
+                font-size: 0.92em;
                 line-height: 1.8;
-                margin-bottom: 10px;
+                margin-bottom: 13px;
             }
 
             .birthday-message .signature {
-                font-size: 1em;
-                margin-top: 25px;
+                font-size: 0.98em;
+                margin-top: 22px;
             }
 
             .cake-svg {
-                width: 200px;
+                width: 220px;
             }
 
             .click-hint {
-                font-size: 0.9em;
+                font-size: 0.92em;
                 margin-top: 25px;
             }
 
@@ -557,9 +592,9 @@
             }
 
             .music-control {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+                width: 52px;
+                height: 52px;
+                font-size: 21px;
                 bottom: 20px;
                 right: 20px;
             }
@@ -568,20 +603,24 @@
                 width: 36px;
                 height: 36px;
                 font-size: 26px;
-                top: 15px;
-                right: 15px;
+                top: 12px;
+                right: 12px;
             }
         }
 
         /* Very Small Mobile */
         @media (max-width: 360px) {
+            body {
+                padding: 8px 6px;
+            }
+
             .pin-screen {
-                padding: 30px 20px;
+                padding: 28px 18px;
             }
 
             .birthday-message {
-                padding: 30px 20px;
-                margin: 0 10px;
+                padding: 25px 18px 28px;
+                max-height: 72vh;
             }
 
             .pin-input {
@@ -589,70 +628,140 @@
             }
 
             .pin-digit {
-                width: 44px;
-                height: 44px;
-                font-size: 20px;
+                width: 46px;
+                height: 46px;
+                font-size: 22px;
             }
 
             .pin-screen h1 {
-                font-size: 1.3em;
+                font-size: 1.35em;
+            }
+
+            .pin-screen p {
+                font-size: 0.88em;
             }
 
             .birthday-message h1 {
                 font-size: 1.4em;
+                margin-bottom: 16px;
             }
 
             .birthday-message p {
-                font-size: 0.9em;
+                font-size: 0.88em;
+                line-height: 1.75;
+                margin-bottom: 12px;
+            }
+
+            .birthday-message .signature {
+                font-size: 0.94em;
+                margin-top: 20px;
             }
 
             .cake-svg {
-                width: 180px;
+                width: 190px;
+            }
+
+            .click-hint {
+                font-size: 0.88em;
             }
 
             .back-button {
-                padding: 6px 12px;
+                padding: 7px 12px;
                 font-size: 12px;
+            }
+
+            .music-control {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+                bottom: 18px;
+                right: 18px;
             }
         }
 
         /* Landscape orientation on mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
             .pin-screen {
                 padding: 25px 30px;
+                max-width: 400px;
             }
 
             .birthday-message {
-                padding: 25px 30px;
-                max-height: 90vh;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
+                padding: 25px 28px 30px;
+                max-height: 82vh;
+                max-width: 520px;
+            }
+
+            .birthday-message h1 {
+                font-size: 1.6em;
+                margin-bottom: 15px;
+            }
+
+            .birthday-message p {
+                font-size: 0.9em;
+                line-height: 1.7;
+                margin-bottom: 11px;
+            }
+
+            .birthday-message .signature {
+                margin-top: 18px;
             }
 
             .cake-svg {
-                width: 180px;
+                width: 200px;
             }
 
             .click-hint {
-                margin-top: 15px;
+                margin-top: 20px;
+                font-size: 0.95em;
             }
 
             .music-control {
                 bottom: 15px;
                 right: 15px;
+                width: 50px;
+                height: 50px;
             }
 
             .back-button {
                 top: 10px;
                 left: 10px;
-                padding: 6px 12px;
+                padding: 7px 14px;
+                font-size: 13px;
             }
         }
 
-        /* Fix for iOS Safari */
+        /* Extra short landscape */
+        @media (max-height: 450px) and (orientation: landscape) {
+            .birthday-message {
+                max-height: 88vh;
+                padding: 20px 25px 25px;
+            }
+
+            .birthday-message h1 {
+                font-size: 1.45em;
+                margin-bottom: 12px;
+            }
+
+            .birthday-message p {
+                font-size: 0.85em;
+                line-height: 1.65;
+                margin-bottom: 10px;
+            }
+
+            .cake-svg {
+                width: 170px;
+            }
+        }
+
+        /* Fix for iOS Safari input zoom prevention */
         @supports (-webkit-touch-callout: none) {
             .pin-digit:focus {
-                font-size: 22px;
+                font-size: 16px;
             }
         }
     </style>
@@ -874,7 +983,6 @@
                 })
                 .catch(e => {
                     console.log('Audio play failed:', e);
-                    // Try to reload and play again
                     birthdayAudio.load();
                     setTimeout(() => {
                         birthdayAudio.play()
@@ -915,7 +1023,6 @@
                     })
                     .catch(e => {
                         console.log('Audio play error:', e);
-                        // Try loading again
                         birthdayAudio.load();
                         setTimeout(() => {
                             birthdayAudio.play()
